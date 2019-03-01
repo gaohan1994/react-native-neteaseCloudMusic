@@ -13,7 +13,7 @@ import ScreenUtil from './common/style';
 import MainTab from './TabNavigator';
 
 import Search from './container/Search';
-import Media from './container/Media';
+import Media from './container/MediaPlay';
 
 const withOutNavigation = {
   navigationOptions: () => ({
@@ -24,12 +24,13 @@ const withOutNavigation = {
  * @param {NavigationRouteConfigMap} 导航器屏幕
  */
 const navigationRouteConfigMap: NavigationRouteConfigMap = {
-  Media: {
-    screen: Media,
-    ...withOutNavigation,
-  },
+  
   MainTab: {
     screen: MainTab,
+    ...withOutNavigation,
+  },
+  Media: {
+    screen: Media,
     ...withOutNavigation,
   },
   Search: {

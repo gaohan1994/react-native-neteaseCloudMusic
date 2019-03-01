@@ -8,6 +8,20 @@ class DiscoverService {
       'GET',
     )
   }
+
+  public personalized = () => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/personalized`,
+      'GET',
+    )
+  }
+
+  public personalizedNewSong = () => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/personalized/newsong`,
+      'GET',
+    )
+  }
 }
 
 export default new DiscoverService();

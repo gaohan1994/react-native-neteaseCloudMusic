@@ -8,6 +8,9 @@
 import { 
   RECEIVE_SEARCH_HOT,
   RECEIVE_BANNERS,
+  RECEIVE_SONGS_URL,
+  RECEIVE_PERSONALIZED,
+  RECEIVE_PERSONALIZED_NEWSONG,
 } from '../constants';
 import { ThunkDispatch } from 'redux-thunk';
 import { Dispatch } from 'redux';
@@ -15,7 +18,10 @@ import { Dispatch } from 'redux';
 export interface ActionAbstractInterface {
   type: 
     RECEIVE_SEARCH_HOT |
-    RECEIVE_BANNERS;
+    RECEIVE_BANNERS |
+    RECEIVE_SONGS_URL |
+    RECEIVE_PERSONALIZED |
+    RECEIVE_PERSONALIZED_NEWSONG;
   payload: any;
 }
 

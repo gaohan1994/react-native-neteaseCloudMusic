@@ -88,7 +88,7 @@ export const withTimeout = (time: number) => (promise: any, option?: any) =>
         promise,
         new Promise((resolve, reject)=> 
             setTimeout((_: any) => reject(
-                new CentermError({code: CentermError.ErrorCode.TimeoutCode, msg: '请求超时！请检查网络连接！', body: option})
+                // new CentermError({code: CentermError.ErrorCode.TimeoutCode, msg: '请求超时！请检查网络连接！', body: option})
             ), time)
         )
     ]);
