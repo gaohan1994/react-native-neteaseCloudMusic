@@ -8,21 +8,27 @@ import {
   Image, 
   findNodeHandle, 
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Animated,
+  ImageBackground,
+  Easing,
 } from 'react-native'
 import ScreenUtil, { commonStyle, UIColor } from '../common/style';
 import { 
   Header,
-  Progress
+  Progress,
+  Player
 } from '../component';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { BlurView } from 'react-native-blur';
 import { connect } from 'react-redux';
 import { NavigationScreenProp } from 'react-navigation';
-import { DispatchAbstract } from '../action/actions';
+import { DispatchAbstract, AbstractParams } from '../action/actions';
 import MediaController from '../action/MediaController';
 import { Stores } from '../store/index';
-import { getCurrentSongDetail } from '../store/media';
-
+import { getCurrentSongDetail, getControll, MediaControll } from '../store/player';
+import UIImage from '../img/index';
+import Dialog from '../component/Dialog';
 
 const iconProps = {
   color: UIColor.white,
@@ -39,7 +45,7 @@ const renderIcon = (
     rest && rest[0] ? restIconProps = rest[0] : {}
   }
   return (
-    <TouchableOpacity style={[styles.headerContainerStyle]}>
+    <TouchableOpacity style={[styles.headerContainerStyle]} onPress={onPress} >
       <Icon 
         name={name} 
         {...iconProps}
@@ -53,38 +59,93 @@ type Props = {
   dispatch: Dispatch<any>;
   navigation: NavigationScreenProp<any>;
   currentSong: any;
+  controll: MediaControll;
 };
 
 type State = {
   viewRef: any;
+  contentType: 'Cover' | 'Lyric'
 };
 
 class MediaPlay extends React.Component<Props, State> {
 
+  private animatedLoopEvent: Animated.CompositeAnimation;
+  private animatedValue: Animated.Value;
   private backgroundImage: any;
 
-  state = { viewRef: null };
+  constructor (props: Props) {
+    super(props);
+    this.animatedValue = new Animated.Value(0);
+    this.animatedLoopEvent = Animated.timing(this.animatedValue, {
+      toValue: 10,
+      duration: 300000,
+      easing: Easing.linear
+    });
+    this.initHandle(props);
+  }
+
+  state: State = { 
+    viewRef: null,
+    contentType: 'Cover'
+  };
+
+  public initHandle = (props: Props) => {
+    const { controll } = props;
+  }
+
+  componentWillReceiveProps = (nextProps: Props) => {
+    const { controll: { paused : currentPaused } } = this.props;
+    const { controll: { paused : nextPaused } } = nextProps;
+    if (currentPaused === nextPaused) {
+      return;
+    } else if (nextPaused === false) {
+      this.animatedHandle();
+    } else if (nextPaused === true) {
+      this.pauesdAnimatedHandle();
+    }
+  }
 
   componentDidMount = () => {
+    this.fetchSong(this.props);
     /**
      * @param {1.请求当前歌曲详情}
      */
     this.fetchSongUrl(this.props);
+
+    this.animatedHandle();
   }
 
   componentDidUpdate = () => {
 
   }
 
-  public fetchSongUrl = (props: Props) => {
+  componentWillUnmount = () => {
+    this.animatedLoopEvent.stop();
+  }
+
+  public fetchSong = async (props: Props) => {
     const { dispatch, navigation } = props;
+    const ids = navigation.getParam('ids') || ['347231'];
     const params: DispatchAbstract<{ids: string[]}> = {
       dispatch,
-      param: {
-        ids: ['347230', '347231']
-      }
+      param: { ids }
     };
+    console.log('params: ', params);
+    const { success } = await MediaController.getSong(params);
 
+    if (success === true) {
+      MediaController.getSongUrl(params);
+    }
+  }
+
+  public fetchSongUrl = (props: Props) => {
+    const { dispatch, navigation } = props;
+    const ids = navigation.getParam('ids') || ['347230'];
+    const params: DispatchAbstract<{ids: string[]}> = {
+      dispatch,
+      param: { ids }
+    };
+    console.log('params: ', params);
     MediaController.getSongUrl(params);
   }
 
@@ -92,17 +153,78 @@ class MediaPlay extends React.Component<Props, State> {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
-  render() {
-    
-    const containerViewStyle: ViewStyle = { flex: 1 };
+  /**
+   * @param {切换content显示类别}
+   */
+  public onContentPressHandle = () => {
+    this.setState((prevState: State) => {
+      if (prevState.contentType === 'Cover') {
+        return {
+          ...prevState,
+          contentType: 'Lyric'
+        };
+      } else {
+        return {
+          ...prevState,
+          contentType: 'Cover'
+        };
+      }
+    })
+  }
 
+  private animatedHandle = () => {
+    this.animatedLoopEvent.start();
+  }
+
+  private pauesdAnimatedHandle = () => {
+    this.animatedLoopEvent.stop();
+  }
+
+  public onPauseHandle = () => {
+    console.log('onPauseHandle')
+    const params: AbstractParams = { param: { paused: true } };
+    MediaController.playerControll(params);
+  }
+
+  public onPlayHandle = () => {
+    console.log('onPlayHandle')
+    const params: AbstractParams = { param: { paused: false } };
+    MediaController.playerControll(params);
+  }
+
+  public onChangeSong = async (type: string) => {
+
+    const checkSuccessHandle = ({ success, message }: any) => {
+
+      if (success === false) {
+        Dialog.showToast(message);
+      }
+    }
+
+    switch (type) {
+      case 'NEXT':
+        const nextResult = await MediaController.nextSong();
+        checkSuccessHandle(nextResult);
+        return;
+      case 'LAST':
+        const lastResult = await MediaController.lastSong();
+        checkSuccessHandle(lastResult);
+        return;
+      default: 
+        return;
+    }
+  }
+
+  render() {
+    const containerViewStyle: ViewStyle = { flex: 1 };
+    const { currentSong } = this.props;
     return (
       <View
         style={containerViewStyle}
       >
         <Image
           ref={(img) => { this.backgroundImage = img; }}
-          source={{uri: 'https://p1.music.126.net/QHw-RuMwfQkmgtiyRpGs0Q==/102254581395219.jpg'}}
+          source={{uri: currentSong.al && currentSong.al.picUrl}}
           style={styles.absolute}
           onLoadEnd={this.imageLoaded.bind(this)}
           resizeMode="cover"
@@ -113,12 +235,14 @@ class MediaPlay extends React.Component<Props, State> {
           blurType="dark"
           blurAmount={10}
         />
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="light-content" />
 
         <Header
           style={{backgroundColor: 'rgba(0, 0, 0, 0)'}}
           content={this.renderHeader()}
         />
+
+        <Player />
         {this.renderContent()}
         {this.renderFooter()}
       </View>
@@ -140,10 +264,44 @@ class MediaPlay extends React.Component<Props, State> {
   }
 
   private renderContent = () => {
+    const { contentType } = this.state;
+    const { currentSong } = this.props;
+
+    const interpolatedAnimation = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg']
+    });
+
+    const AnimatedViewTransform = {
+      transform: [{
+        rotate: interpolatedAnimation
+      }]
+    }
+
     return (
-      <View>
-        <Text>renderContent</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={this.onContentPressHandle}>
+        {
+          contentType === 'Cover' ? (
+            <View style={styles.contentContainer}>
+              <Animated.View style={AnimatedViewTransform}>
+                <ImageBackground
+                  style={styles.imageCover}
+                  source={UIImage.circle}
+                >
+                  <Image 
+                    style={styles.cover}
+                    source={{uri: currentSong.al && currentSong.al.picUrl}} 
+                  />
+                </ImageBackground>
+              </Animated.View>
+            </View>
+          ) : (
+            <View style={styles.contentContainer}>
+              <Text>renderContent LYC</Text>
+            </View>
+          )
+        }
+      </TouchableWithoutFeedback>
     );
   }
 
@@ -159,20 +317,41 @@ class MediaPlay extends React.Component<Props, State> {
       paddingBottom: ScreenUtil.isIphoneX() === true ? ScreenUtil.autoHeight(34) : ScreenUtil.autoHeight(10),
     };
 
+    const { controll: { paused } } = this.props;
+
     return (
       <View style={footerViewStyle}>
         <Progress />
         <View style={{flexDirection: 'row'}} >
           {renderIcon("loop", () => {})}
-          {renderIcon("control-start", () => {})}
-          {renderIcon("control-play", () => {}, {size: 28})}
-          {renderIcon("control-end", () => {})}
+          {renderIcon("control-start", () => this.onChangeSong('LAST'))}
+          {
+            paused === false ? (
+              renderIcon("control-play", () => this.onPauseHandle(), {size: 28})
+            ) : (
+              renderIcon("control-pause", () => this.onPlayHandle(), {size: 28})
+            )
+          }
+          {renderIcon("control-end", () => this.onChangeSong('NEXT'))}
           {renderIcon("list", () => {})}
         </View>
       </View>
     );
   }
 }
+
+const mapStateToProps = (state: Stores) => {
+  const controll = getControll(state);
+
+  return {
+    currentSong: getCurrentSongDetail(state),
+    controll,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  dispatch,
+});
 
 const styles = StyleSheet.create({
   absolute: {
@@ -183,15 +362,22 @@ const styles = StyleSheet.create({
     ...commonStyle.layout('center', 'center'),
     flexDirection: 'row',
     flex: 1,
+  },
+  contentContainer: {
+    ...commonStyle.layout('center', 'center'),
+    flexDirection: 'column',
+    flex: 1,
+  },
+  imageCover: {
+    ...commonStyle.layout('center', 'center'),
+    width: ScreenUtil.autoWidth(300),
+    height: ScreenUtil.autoWidth(300),
+  },
+  cover: {
+    width: ScreenUtil.autoWidth(200),
+    height: ScreenUtil.autoWidth(200),
+    borderRadius: ScreenUtil.autoWidth(200 / 2),
   }
-});
-
-const mapStateToProps = (state: Stores) => ({
-  currentSong: getCurrentSongDetail(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaPlay);

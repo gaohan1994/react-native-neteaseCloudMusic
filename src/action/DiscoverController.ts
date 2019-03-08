@@ -5,6 +5,8 @@ import {
   RECEIVE_PERSONALIZED, 
   RECEIVE_PERSONALIZED_NEWSONG
 } from '../constants';
+import { AbstractParams } from './actions';
+import { RECEIVE_PLAYLIST_DETAIL } from '../constants';
 
 class DiscoverController {
   public banner = async (): Promise<any> => {
@@ -40,6 +42,18 @@ class DiscoverController {
       store.dispatch({
         type: RECEIVE_PERSONALIZED_NEWSONG,
         payload: { personalizedNewSong: result }
+      })
+    }
+  }
+
+  public playlistDetail = async (params: AbstractParams<any>): Promise<any> => {
+    const { param } = params;
+    const { code, playlist } = await DiscoverService.playlistDetail(param);
+
+    if (code === 200) {
+      store.dispatch({
+        type: RECEIVE_PLAYLIST_DETAIL,
+        payload: { playlistDetail: playlist }
       })
     }
   }

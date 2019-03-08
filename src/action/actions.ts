@@ -11,6 +11,14 @@ import {
   RECEIVE_SONGS_URL,
   RECEIVE_PERSONALIZED,
   RECEIVE_PERSONALIZED_NEWSONG,
+  RECEIVE_PLAYLIST_DETAIL,
+  RECEIVE_CURRENT_SONG_URL,
+  CONTROLL_CHANGE_PAUSED,
+  NEXT_SONG,
+  LAST_SONG,
+  RECEIVE_SONGS,
+  RECEIVE_PLAYER_SONGS,
+  CONTROLL_CURRENT_DETAIL,
 } from '../constants';
 import { ThunkDispatch } from 'redux-thunk';
 import { Dispatch } from 'redux';
@@ -21,13 +29,25 @@ export interface ActionAbstractInterface {
     RECEIVE_BANNERS |
     RECEIVE_SONGS_URL |
     RECEIVE_PERSONALIZED |
-    RECEIVE_PERSONALIZED_NEWSONG;
+    RECEIVE_PERSONALIZED_NEWSONG |
+    RECEIVE_PLAYLIST_DETAIL |
+    RECEIVE_CURRENT_SONG_URL |
+    CONTROLL_CHANGE_PAUSED |
+    NEXT_SONG |
+    LAST_SONG |
+    RECEIVE_SONGS |
+    RECEIVE_PLAYER_SONGS |
+    CONTROLL_CURRENT_DETAIL;
   payload: any;
 }
 
 type Actions = ActionAbstractInterface;
 
 export type MyDispatch = ThunkDispatch<any, any, any> | Dispatch<Actions>;
+
+export interface AbstractParams<T extends Object = {}> {
+  param: T;
+}
 
 export interface DispatchAbstract<T extends Object = {}> {
   param: T;

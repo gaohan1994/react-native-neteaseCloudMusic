@@ -3,6 +3,27 @@ import { Text, View, ViewProperties, StyleSheet, ViewStyle, TouchableOpacity } f
 import ScreenUtil, { UIColor, commonStyle } from '../common/style';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import NavigationService from '../NavigationService';
+import { NavigationScreenProp } from 'react-navigation';
+
+function defaultNavigationBackHandle (navigation: NavigationScreenProp<any>) {
+  console.log('navigation: ', navigation);
+  navigation.goBack();
+}
+
+export const HeaderLeft = ({navigation, onPress}: { navigation: NavigationScreenProp<any>; onPress?: () => void }) => {
+  return (
+    <TouchableOpacity 
+      onPress={onPress ? onPress : () => defaultNavigationBackHandle(navigation)} 
+      style={{paddingLeft: ScreenUtil.autoWidth(15)}}
+    >
+      <Icon 
+        size={16}
+        name="arrow-left"
+        color="#ffffff"
+      />
+    </TouchableOpacity>
+  );
+}
 
 type Props = {
   content?: JSX.Element;

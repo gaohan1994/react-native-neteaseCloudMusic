@@ -14,12 +14,14 @@ import status, { Status, initState as statusState } from './status';
 import search, { Search, initState as searchState } from './search';
 import media, { Media, initState as mediaState } from './media';
 import discover, { Discover, initState as discoverState } from './discover';
+import player, { Player, initState as playerState } from './player';
 
 export interface Stores {
   status: Status;
   search: Search;
   discover: Discover;
   media: Media;
+  player: Player;
 }
 
 export const StoreState = {
@@ -27,13 +29,15 @@ export const StoreState = {
   search: searchState,
   discover: discoverState,
   media: mediaState,
+  player: playerState,
 };
 
 export default combineReducers({
   status,
   search,
   discover,
-  media
+  media,
+  player
 });
 
 const configureStore = () => {

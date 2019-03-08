@@ -14,6 +14,7 @@ import MainTab from './TabNavigator';
 
 import Search from './container/Search';
 import Media from './container/MediaPlay';
+import Playlist from './container/Playlist';
 
 const withOutNavigation = {
   navigationOptions: () => ({
@@ -24,7 +25,6 @@ const withOutNavigation = {
  * @param {NavigationRouteConfigMap} 导航器屏幕
  */
 const navigationRouteConfigMap: NavigationRouteConfigMap = {
-  
   MainTab: {
     screen: MainTab,
     ...withOutNavigation,
@@ -33,10 +33,13 @@ const navigationRouteConfigMap: NavigationRouteConfigMap = {
     screen: Media,
     ...withOutNavigation,
   },
+  Playlist: {
+    screen: Playlist,
+  },
   Search: {
     screen: Search,
     ...withOutNavigation,
-  }
+  },
 };
 
 /**

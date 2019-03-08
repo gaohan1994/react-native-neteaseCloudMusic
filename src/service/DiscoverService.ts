@@ -20,6 +20,13 @@ class DiscoverService {
     return request(
       `${config.FETCH_COMMON_ENTRY}/personalized/newsong`,
       'GET',
+    );
+  }
+
+  public playlistDetail = (params: any) => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/playlist/detail?${params}`,
+      'GET'
     )
   }
 }

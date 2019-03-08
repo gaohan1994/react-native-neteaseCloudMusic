@@ -29,6 +29,60 @@ const RenderTitle = ({
   )
 }
 
+
+const IconViewStyle: ViewStyle = {
+  ...commonStyle.layout('center', 'center'),
+  flex: 1,
+  flexDirection: 'column',
+};
+
+const IconView: ViewStyle = {
+  ...commonStyle.layout('center', 'center'),
+  width: ScreenUtil.autoWidth(40),
+  height: ScreenUtil.autoWidth(40),
+  borderRadius: ScreenUtil.autoWidth(20),
+  backgroundColor: UIColor.mainColor
+};
+
+export const NavIcon = ({
+  name, 
+  value,
+  route,
+  iconColor,
+  textColor,
+  background=true
+}: {
+  name: string;
+  value: string;
+  iconColor?: string;
+  textColor?: string;
+  background?: boolean;
+  route?: string;
+}): JSX.Element => {
+  return (
+    <TouchableOpacity style={IconViewStyle}>
+      {
+        background === true ? (
+          <View style={IconView}>
+            <Icon 
+              name={name} 
+              color={'#ffffff'}
+              size={22}
+            />
+          </View>
+        ) : (
+          <Icon 
+            name={name} 
+            color={iconColor || '#ffffff'}
+            size={22}
+          />
+        )
+      }
+      <Text style={[commonStyle.mar('t', 5), {fontSize: ScreenUtil.setSpText(12), color: textColor}]} >{value}</Text>
+    </TouchableOpacity>
+  );
+}
+
 const textViewStyle: TextStyle = {
   ...commonStyle.mar('t', 4),
   fontSize: ScreenUtil.setSpText(12),
@@ -106,43 +160,6 @@ class Discover extends React.Component<Props, State> {
   }
 
   private renderNavbar = (): JSX.Element => {
-
-    const IconViewStyle: ViewStyle = {
-      ...commonStyle.layout('center', 'center'),
-      flex: 1,
-      flexDirection: 'column',
-    };
-
-    const IconView: ViewStyle = {
-      ...commonStyle.layout('center', 'center'),
-      width: ScreenUtil.autoWidth(40),
-      height: ScreenUtil.autoWidth(40),
-      borderRadius: ScreenUtil.autoWidth(20),
-      backgroundColor: UIColor.mainColor
-    };
-
-    const NavIcon = ({
-      name, 
-      value,
-      route,    
-    }: {
-      name: string;
-      value: string;
-      route?: string;
-    }): JSX.Element => {
-      return (
-        <TouchableOpacity style={IconViewStyle}>
-          <View style={IconView}>
-            <Icon 
-              name={name} 
-              color={'#ffffff'}
-              size={22}
-            />
-          </View>
-          <Text style={[commonStyle.mar('t', 5), {fontSize: ScreenUtil.setSpText(12)}]} >{value}</Text>
-        </TouchableOpacity>
-      );
-    }
 
     return (
       <View style={styles.NavViewStyle}>
