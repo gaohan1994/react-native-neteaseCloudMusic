@@ -110,7 +110,7 @@ class MediaPlay extends React.Component<Props, State> {
     /**
      * @param {1.请求当前歌曲详情}
      */
-    this.fetchSongUrl(this.props);
+    // this.fetchSongUrl(this.props);
 
     this.animatedHandle();
   }
@@ -125,27 +125,28 @@ class MediaPlay extends React.Component<Props, State> {
 
   public fetchSong = async (props: Props) => {
     const { dispatch, navigation } = props;
-    const ids = navigation.getParam('ids') || ['347231'];
-    const params: DispatchAbstract<{ids: string[]}> = {
+    const ids = navigation.getParam('ids');
+    const currentSong = navigation.getParam('currentSong') || {};
+    const params: DispatchAbstract<{ids: string[], currentSong: any}> = {
       dispatch,
-      param: { ids }
+      param: { ids, currentSong }
     };
     console.log('params: ', params);
-    const { success } = await MediaController.getSong(params);
+    MediaController.getSong(params);
+    // const { success } = await MediaController.getSong(params);
 
-    if (success === true) {
-      MediaController.getSongUrl(params);
-    }
+    // if (success === true) {
+    //   MediaController.getSongUrl(params);
+    // }
   }
 
   public fetchSongUrl = (props: Props) => {
     const { dispatch, navigation } = props;
-    const ids = navigation.getParam('ids') || ['347230'];
+    const ids = navigation.getParam('ids');
     const params: DispatchAbstract<{ids: string[]}> = {
       dispatch,
       param: { ids }
     };
-    console.log('params: ', params);
     MediaController.getSongUrl(params);
   }
 
@@ -181,13 +182,11 @@ class MediaPlay extends React.Component<Props, State> {
   }
 
   public onPauseHandle = () => {
-    console.log('onPauseHandle')
     const params: AbstractParams = { param: { paused: true } };
     MediaController.playerControll(params);
   }
 
   public onPlayHandle = () => {
-    console.log('onPlayHandle')
     const params: AbstractParams = { param: { paused: false } };
     MediaController.playerControll(params);
   }
@@ -218,13 +217,14 @@ class MediaPlay extends React.Component<Props, State> {
   render() {
     const containerViewStyle: ViewStyle = { flex: 1 };
     const { currentSong } = this.props;
+    console.log('currentSong: ', currentSong);
     return (
       <View
         style={containerViewStyle}
       >
         <Image
           ref={(img) => { this.backgroundImage = img; }}
-          source={{uri: currentSong.al && currentSong.al.picUrl}}
+          source={{uri: currentSong.al && currentSong.al.picUrl || ''}}
           style={styles.absolute}
           onLoadEnd={this.imageLoaded.bind(this)}
           resizeMode="cover"
@@ -250,13 +250,23 @@ class MediaPlay extends React.Component<Props, State> {
   }
 
   private renderHeader = () => {
+    const { currentSong } = this.props;
+    const artists: string[] = [];
+
+    currentSong && currentSong.ar && currentSong.ar.forEach((artist: any) => {
+      artists.push(artist.name);
+    });
 
     return (
       <View style={styles.headerContainerStyle} >
-        {renderIcon('arrow-left', () => {})}
+        {renderIcon('arrow-left', () => {this.props.navigation.goBack()})}
         <View style={[styles.headerContainerStyle, {flex: 3, flexDirection: 'column'}]}>
-          <Text style={[{ color: UIColor.white, fontSize: ScreenUtil.setSpText(12) }]} >给你的爱一直很安静</Text>
-          <Text style={[{ color: UIColor.white, fontSize: ScreenUtil.setSpText(12) }]} >阿桑</Text>
+          <Text style={[{ color: UIColor.white, fontSize: ScreenUtil.setSpText(12) }]} >
+            {currentSong.name}
+          </Text>
+          <Text style={[{ color: UIColor.white, fontSize: ScreenUtil.setSpText(12) }]} >
+            {artists.join(',')}
+          </Text>
         </View>
         {renderIcon("share-alt", () => {})}
       </View>

@@ -27,8 +27,7 @@ class Playlist extends React.Component<Props, State> {
 
   componentDidMount = () => {
     const { navigation } = this.props;
-    const playlistId = navigation.getParam('id') || 2682945515;
-
+    const playlistId = navigation.getParam('id');
     const payload: AbstractParams = {
       param: `id=${playlistId}`
     };
@@ -47,10 +46,9 @@ class Playlist extends React.Component<Props, State> {
   };
 
   public onSongPressHandle = (item: any) => {
-    const ids: any[] = [item.id];
-
-    const { navigation } = this.props;
-    navigation.navigate({routeName: 'Media', params: { ids }});
+    const { navigation, playlistDetail } = this.props;
+    const ids: any[] = playlistDetail.trackIds.map((id: any) => `${id.id}`);
+    navigation.navigate({routeName: 'Media', params: { ids, currentSong: item }});
   }
 
   render() {
@@ -180,7 +178,7 @@ class Playlist extends React.Component<Props, State> {
 
     return (
       <TouchableOpacity style={itemViewStyle} onPress={() => this.onSongPressHandle(item)} >
-        <View 
+        <View
           style={{
             ...commonStyle.layout('center', 'center'),
             width: ScreenUtil.autoWidth(50),

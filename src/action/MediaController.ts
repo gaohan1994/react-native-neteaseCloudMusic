@@ -5,10 +5,13 @@ import {
   NEXT_SONG,
   LAST_SONG,
   RECEIVE_SONGS,
+  RECEIVE_VIDEO,
+  RECEIVE_MY_PLAYLIST,
+  CONTROLL_CURRENT_SONG
 } from '../constants';
 import { store } from '../App';
 import numeral from 'numeral';
-import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED } from '../constants';
+import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV } from '../constants';
 
 class MediaController {
 
@@ -73,8 +76,8 @@ class MediaController {
     });
   }
 
-  public getSong = async (params: DispatchAbstract<{ids: string[]}>): Promise<any> => {
-    const { dispatch, param: { ids } } = params;
+  public getSong = async (params: DispatchAbstract<{ids: string[], currentSong: any}>): Promise<any> => {
+    const { dispatch, param: { ids, currentSong } } = params;
 
     const payload = `ids=${ids.join(',')}`;
     const { code, songs } = await MediaService.getSong(payload);
@@ -84,6 +87,14 @@ class MediaController {
         type: RECEIVE_PLAYER_SONGS,
         payload: { playerSongs: songs }
       });
+      console.log('currentSong: ', currentSong);
+      const currentId = currentSong.id;
+      const index = ids.findIndex((id: any) => `${id}` === `${currentId}`);
+
+      dispatch({
+        type: CONTROLL_CURRENT_SONG,
+        payload: { currentSong: index }
+      })
       return { success: true };
     } else {
       return { success: false };
@@ -100,6 +111,58 @@ class MediaController {
       dispatch({
         type: RECEIVE_CURRENT_SONG_URL,
         payload: { currentSongUrl: data }
+      })
+    } else {
+      return { success: false };
+    }
+  }
+
+  public getMv = async (): Promise<any> => {
+
+    const { code, result } = await MediaService.getMv();
+
+    if (code === 200) {
+      store.dispatch({
+        type: RECEIVE_MV,
+        payload: { mv: result }
+      })
+
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+  }
+
+  public getVideo = async (): Promise<any> => {
+    const videoGroupId = 'id=9104';
+    const { code, datas } = await MediaService.getVideo(videoGroupId);
+
+    if (code === 200) {
+      const videoData = datas.map((video: any) => {
+        return video.data;
+      });
+      console.log('videoData: ', videoData);
+      store.dispatch({
+        type: RECEIVE_VIDEO,
+        payload: {
+          video: videoData
+        }
+      })
+    } else {
+      return { success: false };
+    }
+  }
+
+  public getMinePlaylist = async (): Promise<any> => {
+    const payload = `uid=${122141577}`;
+    const { code, playlist } = await MediaService.getMinePlaylist(payload);
+
+    if (code === 200) {
+      store.dispatch({
+        type: RECEIVE_MY_PLAYLIST,
+        payload: {
+          myPlaylist: playlist
+        }
       })
     } else {
       return { success: false };

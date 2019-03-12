@@ -8,11 +8,13 @@ import { Stores } from '../store/index';
 import { connect } from 'react-redux';
 import { getBanners, getPersonalized, getPersonalizedNewSong } from '../store/discover';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { NavigationScreenProp } from 'react-navigation';
 
 type Props = {
   banners: any[];
   personalized: any[];
   personalizedNewSong: any[];
+  navigation: NavigationScreenProp<any>;
 };
 
 type State = {};
@@ -188,9 +190,17 @@ class Discover extends React.Component<Props, State> {
       ...PlaylistSize,
     };
 
+    const playlistClickHandle = (data: any) => {
+      const { navigation } = this.props;
+      navigation.navigate({routeName: 'Playlist', params: data});
+    }
+
     const Playlist = ({ data }: any): JSX.Element => {
       return (
-        <TouchableOpacity style={PlaylistViewStyle}>
+        <TouchableOpacity 
+          style={PlaylistViewStyle}
+          onPress={() => playlistClickHandle(data)}
+        >
           <ImageBackground
             source={{uri: data.picUrl}}
             resizeMode="cover"
@@ -201,7 +211,8 @@ class Discover extends React.Component<Props, State> {
                 flexDirection: 'row',
                 position: 'absolute',
                 right: 2,
-                top: 2
+                top: 2,
+                alignItems: 'center'
               }} 
             >
               <Icon name="earphones" color={UIColor.white} />

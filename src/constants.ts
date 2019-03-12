@@ -25,6 +25,15 @@ export type RECEIVE_CURRENT_SONG_URL = typeof RECEIVE_CURRENT_SONG_URL;
 export const RECEIVE_SONGS = 'RECEIVE_SONGS';
 export type RECEIVE_SONGS = typeof RECEIVE_SONGS;
 
+export const RECEIVE_MV = 'RECEIVE_MV';
+export type RECEIVE_MV = typeof RECEIVE_MV;
+
+export const RECEIVE_VIDEO = 'RECEIVE_VIDEO';
+export type RECEIVE_VIDEO = typeof RECEIVE_VIDEO;
+
+export const RECEIVE_MY_PLAYLIST = 'RECEIVE_MY_PLAYLIST';
+export type RECEIVE_MY_PLAYLIST = typeof RECEIVE_MY_PLAYLIST;
+
 /**
  * @param {Player use}
  */
@@ -43,3 +52,5 @@ export type LAST_SONG = typeof LAST_SONG;
 export const RECEIVE_PLAYER_SONGS = 'RECEIVE_PLAYER_SONGS';
 export type RECEIVE_PLAYER_SONGS = typeof RECEIVE_PLAYER_SONGS;
 
+export const CONTROLL_CURRENT_SONG = 'CONTROLL_CURRENT_SONG';
+export type CONTROLL_CURRENT_SONG = typeof CONTROLL_CURRENT_SONG;

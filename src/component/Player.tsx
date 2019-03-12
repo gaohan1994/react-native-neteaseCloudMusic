@@ -3,7 +3,7 @@ import Video, { VideoProperties, OnLoadData } from 'react-native-video';
 import { Stores } from '../store/index';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { getCurrentSongDetail, getControll, MediaControll } from '../store/player';
+import { getCurrentSongDetail, getControll, MediaControll, getPlayerSongs } from '../store/player';
 import MediaController from '../action/MediaController';
 import { DispatchAbstract } from '../action/actions';
 import { mergeProps } from '../common/config';
@@ -73,6 +73,7 @@ class Player extends React.Component<Props, State> {
   }
 
   public setDuration = (data: OnLoadData) => {
+    console.log('data: ', data);
     const { dispatch } = this.props;
 
     if (dispatch) {
@@ -104,7 +105,10 @@ class Player extends React.Component<Props, State> {
   }
 
   public onEnd = () => {
+    
     MediaController.nextSong();
+
+    Player
   }
 
   public videoError = () => {
@@ -131,6 +135,7 @@ class Player extends React.Component<Props, State> {
           volume={1.0}                            // 0 is muted, 1 is normal.
           muted={false}                           // Mutes the audio entirely.
           paused={controll.paused}                // Pauses playback entirely.
+          // paused={true}
           resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
           repeat={true}                           // Repeat forever.
           playInBackground={true}                 // Audio continues to play when app entering background.
@@ -155,6 +160,7 @@ class Player extends React.Component<Props, State> {
 const mapStateToProps = (state: Stores) => ({
   currentSong: getCurrentSongDetail(state),
   controll: getControll(state),
+  // playerSongs: getPlayerSongs(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({

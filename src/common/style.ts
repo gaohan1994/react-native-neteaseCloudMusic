@@ -208,11 +208,21 @@ const commonStyle: any = {
   layout: (
     align: "flex-start" | "flex-end" | "center" | "stretch" | "baseline", 
     justify: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly",
+    direction?: 'row' | 'column',
   ) => {
-    return {
-      alignItems: align || 'flex-start',
-      justifyContent: justify || 'flex-start',
-    };
+
+    if (!direction) {
+      return {
+        alignItems: align || 'flex-start',
+        justifyContent: justify || 'flex-start',
+      };
+    } else {
+      return {
+        alignItems: align || 'flex-start',
+        justifyContent: justify || 'flex-start',
+        flexDirection: direction || '',
+      };
+    }
   },
 
   mar: (pos: 't' | 'l' | 'r' | 'b' | 'h' | 'v', value?: number) => {

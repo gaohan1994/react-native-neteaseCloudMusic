@@ -7,6 +7,7 @@ import {
   LAST_SONG,
   RECEIVE_PLAYER_SONGS,
   CONTROLL_CURRENT_DETAIL,
+  CONTROLL_CURRENT_SONG
 } from '../constants';
 import { merge } from 'lodash';
 
@@ -43,6 +44,14 @@ export const initState = {
 
 export default function media ( state: Player = initState,  action: Actions ): Player {
   switch (action.type) {
+    case CONTROLL_CURRENT_SONG:
+      const { payload: { currentSong } } = action;
+
+      return {
+        ...state,
+        currentSong
+      };
+
     case CONTROLL_CURRENT_DETAIL:
       const { payload: { controll } } = action;
       return {
@@ -77,18 +86,33 @@ export default function media ( state: Player = initState,  action: Actions ): P
       };
     
     case RECEIVE_PLAYER_SONGS:
-      const { payload: { playerSongs, currentSong } } = action;
+      const { payload: { playerSongs, currentSong: newCurrentSong } } = action;
       return {
         ...state,
         playerSongs,
-        currentSong: currentSong || 0
+        currentSong: newCurrentSong || 0
       };
 
     case RECEIVE_CURRENT_SONG_URL:
       const { payload: { currentSongUrl } } = action;
 
-      const { id } = currentSongUrl[0];
+      // const newPlayerSongs = currentSongUrl.map((url: any) => {
+      //   const { id } = url;
+      //   const index = state.playerSongs.findIndex((s: any) => s.id === id);
 
+      //   const currentSongDetail = {
+      //     ...state.playerSongs[index],
+      //     url,
+      //   };
+
+      //   return currentSongDetail;
+      // });
+      // console.log('newPlayerSongs: ', newPlayerSongs);
+
+      // state.playerSongs = newPlayerSongs;
+
+      // return merge({}, state, {});
+      const { id } = currentSongUrl[0];
       const index = state.playerSongs.findIndex((s: any) => s.id === id);
 
       if (index !== -1) {
@@ -115,3 +139,5 @@ export const getControll = (state: Stores): MediaControll => state.player.contro
 export const getCurrentSongDetail = (state: Stores): any => {
   return state.player.currentSong === -1 ? {} : state.player.playerSongs[state.player.currentSong];
 }
+
+export const getPlayerSongs = (state: Stores) => state.player.playerSongs;

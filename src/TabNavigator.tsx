@@ -66,7 +66,7 @@ class MianTab extends React.Component <MianTabProps, MianTabState> {
                 {this._renderTabarItems('发现', 'music-tone', 'music-tone', Discover)}
                 {this._renderTabarItems('视频', 'social-youtube', 'social-youtube', Video)}
                 {this._renderTabarItems('我的', 'music-tone-alt', 'music-tone-alt', Mine)}
-                {this._renderTabarItems('朋友', 'people', 'people', Friends)}
+                {/* {this._renderTabarItems('朋友', 'people', 'people', Friends)} */}
                 {this._renderTabarItems('账号', 'user', 'user', User)}
             </TabNavigator>
         );
