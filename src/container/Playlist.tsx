@@ -10,6 +10,7 @@ import DiscoverController from '../action/DiscoverController';
 import { AbstractParams } from '../action/actions';
 import { NavIcon } from './Discover';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { Dialog } from '../component';
 
 const ImageSize = {
   width: ScreenUtil.autoWidth(120),
@@ -45,10 +46,10 @@ class Playlist extends React.Component<Props, State> {
     };
   };
 
-  public onSongPressHandle = (item: any) => {
+  public onSongPressHandle = (item?: any) => {
     const { navigation, playlistDetail } = this.props;
     const ids: any[] = playlistDetail.trackIds.map((id: any) => `${id.id}`);
-    navigation.navigate({routeName: 'Media', params: { ids, currentSong: item }});
+    navigation.navigate({routeName: 'Media', params: { ids, currentSong: item || { id: ids[0] } }});
   }
 
   render() {
@@ -120,11 +121,46 @@ class Playlist extends React.Component<Props, State> {
   private renderPlaylist = (): JSX.Element => {
 
     const { playlistDetail } = this.props;
+    const PlayControllView: ViewStyle = {
+      ...commonStyle.layout('', '', 'row'),
+      // height: ScreenUtil.autoHeight(50),
+      
+    };
+    const SubView: ViewStyle = {
+      ...commonStyle.layout('center', '', 'row'),
+      height: ScreenUtil.autoHeight(50),
+    };
+
+    const PlayTextStyle: TextStyle = {
+      fontSize: ScreenUtil.setSpText(13),
+    };
 
     return (
       <View>
-        <View>
-          <Text>title</Text>
+        <View style={PlayControllView}>
+          <TouchableOpacity 
+            onPress={() => this.onSongPressHandle()}
+            style={[SubView, { flex: 3, ...commonStyle.pad('l', 10)}]}
+          >
+            <Icon name="control-play" size={20} />
+            <Text style={[PlayTextStyle, {...commonStyle.mar('l', 5)}]} >播放全部({`共${playlistDetail.trackCount}首`})</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              Dialog.showToast('收藏成功！');
+            }}
+            style={[
+              SubView, { 
+                flex: 1, 
+                // borderTopRightRadius: ScreenUtil.autoWidth(10), 
+                justifyContent: 'center',
+                backgroundColor: UIColor.mainColor,
+              }
+            ]}
+          >
+            <Icon name="plus" size={20} color={UIColor.white} />
+            <Text style={[PlayTextStyle, { color: UIColor.white, ...commonStyle.mar('l', 5) }]} >收藏</Text>
+          </TouchableOpacity>
         </View>
         <FlatList
           data={playlistDetail && playlistDetail.tracks || []}

@@ -337,9 +337,9 @@ class MediaPlay extends React.Component<Props, State> {
           {renderIcon("control-start", () => this.onChangeSong('LAST'))}
           {
             paused === false ? (
-              renderIcon("control-play", () => this.onPauseHandle(), {size: 28})
+              renderIcon("control-pause", () => this.onPauseHandle(), {size: 28})
             ) : (
-              renderIcon("control-pause", () => this.onPlayHandle(), {size: 28})
+              renderIcon("control-play", () => this.onPlayHandle(), {size: 28})
             )
           }
           {renderIcon("control-end", () => this.onChangeSong('NEXT'))}

@@ -23,6 +23,7 @@ import {
   RECEIVE_VIDEO,
   RECEIVE_MY_PLAYLIST,
   CONTROLL_CURRENT_SONG,
+  RECEIVE_USERDETAIL,
 } from '../constants';
 import { ThunkDispatch } from 'redux-thunk';
 import { Dispatch } from 'redux';
@@ -45,7 +46,8 @@ export interface ActionAbstractInterface {
     RECEIVE_MV |
     RECEIVE_VIDEO |
     RECEIVE_MY_PLAYLIST |
-    CONTROLL_CURRENT_SONG;
+    CONTROLL_CURRENT_SONG |
+    RECEIVE_USERDETAIL;
   payload: any;
 }
 

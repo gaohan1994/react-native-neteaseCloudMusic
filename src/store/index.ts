@@ -15,6 +15,7 @@ import search, { Search, initState as searchState } from './search';
 import media, { Media, initState as mediaState } from './media';
 import discover, { Discover, initState as discoverState } from './discover';
 import player, { Player, initState as playerState } from './player';
+import user, { User, initState as userState } from './user';
 
 export interface Stores {
   status: Status;
@@ -22,6 +23,7 @@ export interface Stores {
   discover: Discover;
   media: Media;
   player: Player;
+  user: User;
 }
 
 export const StoreState = {
@@ -30,6 +32,7 @@ export const StoreState = {
   discover: discoverState,
   media: mediaState,
   player: playerState,
+  user: userState,
 };
 
 export default combineReducers({
@@ -37,7 +40,8 @@ export default combineReducers({
   search,
   discover,
   media,
-  player
+  player,
+  user
 });
 
 const configureStore = () => {

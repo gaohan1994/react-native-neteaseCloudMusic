@@ -1,5 +1,5 @@
 import { store } from '../App';
-import { } from '../constants';
+import { RECEIVE_USERDETAIL } from '../constants';
 import UserService from '../service/UserService';
 import { AbstractParams } from './actions';
 
@@ -26,6 +26,25 @@ class UserController {
     const { code } = await UserService.refresh();
 
     console.log('code: ', code);
+  }
+
+  public userDeatail = async (params: AbstractParams<any>) => {
+    const { param: { uid } } = params;
+    const payload = `uid=${uid}`;
+
+    const result = await UserService.userDeatail(payload);
+
+    if (result.code === 200) {
+      store.dispatch({
+        type: RECEIVE_USERDETAIL,
+        payload: {
+          userDetail: result
+        }
+      });
+      return { success: true, result };
+    } else {
+      return { success: false };
+    }
   }
 }
 

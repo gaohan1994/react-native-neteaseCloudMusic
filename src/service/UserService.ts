@@ -24,6 +24,13 @@ class UserService {
       'GET'
     )
   }
+
+  public userDeatail = (params: any) => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/user/detail?${params}`,
+      'GET',
+    )
+  }
 }
 
 export default new UserService();

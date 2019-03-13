@@ -34,6 +34,9 @@ export type RECEIVE_VIDEO = typeof RECEIVE_VIDEO;
 export const RECEIVE_MY_PLAYLIST = 'RECEIVE_MY_PLAYLIST';
 export type RECEIVE_MY_PLAYLIST = typeof RECEIVE_MY_PLAYLIST;
 
+export const RECEIVE_USERDETAIL = 'RECEIVE_USERDETAIL';
+export type RECEIVE_USERDETAIL = typeof RECEIVE_USERDETAIL;
+
 /**
  * @param {Player use}
  */
