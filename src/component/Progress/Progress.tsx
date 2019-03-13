@@ -16,6 +16,33 @@ type Props = {
 class Progress extends React.Component<Props, any> {
 
   public sliderChange = (value: number) => {
+    // console.log('sliderChange: ', value);
+    // const { controll } = this.props;
+
+    // store.dispatch({
+    //   type: CONTROLL_CURRENT_DETAIL,
+    //   payload: {
+    //     controll: {
+    //       sliderProgress: value,
+    //       ff: numeral(controll.duration).value() * value
+    //     }
+    //   }
+    // })
+    // dispatch(setPlaySong({sliderProgress: value, ff: currentPlay.duration * value}));
+  }
+
+  public onSlidingStart = () => {
+    store.dispatch({
+      type: CONTROLL_CURRENT_DETAIL,
+      payload: {
+        controll: {
+          paused: true,
+        }
+      }
+    })
+  }
+
+  public onSlidingComplete = (value: number) => {
     console.log('sliderChange: ', value);
     const { controll } = this.props;
 
@@ -24,12 +51,23 @@ class Progress extends React.Component<Props, any> {
       payload: {
         controll: {
           sliderProgress: value,
-          ff: numeral(controll.duration).value() * value
+          ff: numeral(controll.duration).value() * value,
         }
       }
-    })
-    // dispatch(setPlaySong({sliderProgress: value, ff: currentPlay.duration * value}));
+    });
+
+    setTimeout(() => {
+      store.dispatch({
+        type: CONTROLL_CURRENT_DETAIL,
+        payload: {
+          controll: {
+            paused: false,
+          }
+        }
+      })
+    }, 100);
   }
+
 
   render() {
     const { controll } = this.props;
@@ -73,6 +111,8 @@ class Progress extends React.Component<Props, any> {
           style={{width: ScreenUtil.autoWidth(240)}}
           value={controll.sliderProgress}
           // value={.5}
+          onSlidingStart={this.onSlidingStart}
+          onSlidingComplete={this.onSlidingComplete}
           onValueChange={(value: number) => this.sliderChange(value)}
         />
       </View>

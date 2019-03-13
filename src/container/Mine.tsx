@@ -23,11 +23,18 @@ class Mine extends React.Component<Props, State> {
 
     const { myPlaylist } = this.props;
     console.log('myPlaylist: ', myPlaylist);
+
+    const PlaylistTitle: ViewStyle = {
+      ...commonStyle.pad('v', 10),
+      ...commonStyle.pad('h', 10),
+      backgroundColor: UIColor.grayArea,
+    };
+
     return (
       <View style={{flex: 1}}>
         <Header />
-        <View>
-          <Text>收藏的歌单</Text>
+        <View style={PlaylistTitle}>
+          <Text style={{fontSize: ScreenUtil.setSpText(13)}}>我的歌单（{`${myPlaylist.length}`}）</Text>
         </View>
         {this.renderPlaylistView(myPlaylist)}
       </View>

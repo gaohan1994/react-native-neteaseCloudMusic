@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { getBanners, getPersonalized, getPersonalizedNewSong } from '../store/discover';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { NavigationScreenProp } from 'react-navigation';
+import NavigationService from '../NavigationService';
 
 type Props = {
   banners: any[];
@@ -268,6 +269,12 @@ class Discover extends React.Component<Props, State> {
       ...SongSize,
     };
 
+    const SongClickHandle = (song: any) => {
+      console.log('song: ', song);
+      const ids: any[] = [`${song.id}`];
+      NavigationService.navigate({routeName: 'Media', params: { ids, currentSong: song }});
+    }
+
     const Song = ({data}: any): JSX.Element => {
 
       let artistsName: string[] = [];
@@ -281,7 +288,10 @@ class Discover extends React.Component<Props, State> {
       }
 
       return (
-        <TouchableOpacity style={PlaylistViewStyle}>
+        <TouchableOpacity 
+          style={PlaylistViewStyle}
+          onPress={() => SongClickHandle(data)}
+        >
           <Image
             source={{uri: data.song && data.song.album && data.song.album.picUrl}}
             resizeMode="cover"
