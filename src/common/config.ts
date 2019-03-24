@@ -26,12 +26,12 @@ function getEnvironmentConfig () {
 
   if (environment === 'production') {
     return {
-      FETCH_COMMON_ENTRY: 'http://192.168.31.104:3000', // production
+      FETCH_COMMON_ENTRY: 'http://192.168.101.241:3000', // production
     };
   } else {
     return {
       // FETCH_COMMON_ENTRY: 'http://localhost:3000', // development
-      FETCH_COMMON_ENTRY: 'http://192.168.31.104:3000'
+      FETCH_COMMON_ENTRY: 'http://192.168.101.241:3000'
     };
   }
 }
