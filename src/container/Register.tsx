@@ -19,9 +19,7 @@ type State = {
   userName: string;
   password: string;
   checkPassword: string;
-  remark: string;
-  status: number;
-  roleIds: number;
+  captcha: string;
 }
 
 /**
@@ -44,9 +42,7 @@ class Register extends React.Component<Props, State> {
     userName: '',
     password: '',
     checkPassword: '',
-    remark: '',
-    status: 0,
-    roleIds: 2,
+    captcha: '',
   }
 
   public changeLoginName = (text: string) => {
@@ -64,7 +60,7 @@ class Register extends React.Component<Props, State> {
 
   public checkAuth = () => {
     const helper = new Validator();
-
+    
     helper.add(this.state.loginName, [{
       strategy: 'isNonEmpty',
       errorMsg: '请输入手机号',
@@ -95,22 +91,29 @@ class Register extends React.Component<Props, State> {
       elementName: 'checkPassword',
     }]);
 
+    helper.add(this.state.captcha, [{
+      strategy: 'isNonEmpty',
+      errorMsg: '请输入验证码',
+      elementName: 'captcha',
+    }]);
+
     helper.add([this.state.password, this.state.checkPassword], [{
       strategy: 'isEqual',
       errorMsg: '密码输入不一致',
       elementName: '',
     }]);
     const result = helper.start();
-    console.log('result: ', result);
+
     if (result) {
       return { success: false, result };
     } else {
       return { 
         success: true, 
         result: {
-          userName: this.state.userName,
+          nickname: this.state.userName,
           password: this.state.password,
-          loginName: this.state.loginName,
+          phone: this.state.loginName,
+          captcha: this.state.captcha,
         } 
       };
     }
@@ -124,31 +127,28 @@ class Register extends React.Component<Props, State> {
         result.errMsg || ''
       );
 
-      const payload = {
-        ...result,
-        roleIds: [`${this.state.roleIds}`],
-        status: this.state.status,
-        remark: '福建省福州市'
-      };
+      const payload = { ...result };
       console.log('payload: ', payload);
-      const { success: AddSuccess, result: AddResult } = await UserController.userAdd(payload);
-
-      invariant(
-        AddSuccess,
-        `${AddResult}`
-      );
       
-      Dialog.success('注册成功');
-      /**
-       * 成功之后直接登录
-       */
-      const loginPayload = {
-        username: payload.userName,
-        password: payload.password,
-        rememberMe: false
-      };
+      UserController.captchRegister(payload);
+      // const { success: AddSuccess, result: AddResult } = await UserController.captchRegister(payload);
 
-      const { } = await UserController.login(loginPayload);
+      // invariant(
+      //   AddSuccess,
+      //   `${AddResult}`
+      // );
+      
+      // Dialog.success('注册成功');
+      // /**
+      //  * 成功之后直接登录
+      //  */
+      // const loginPayload = {
+      //   username: payload.userName,
+      //   password: payload.password,
+      //   rememberMe: false
+      // };
+
+      // const { } = await UserController.login(loginPayload);
     } catch (error) {
       Dialog.showToast(error.message);
     }

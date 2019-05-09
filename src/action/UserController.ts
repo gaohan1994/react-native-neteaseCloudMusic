@@ -4,6 +4,28 @@ import UserService from '../service/UserService';
 import { AbstractParams } from './actions';
 
 class UserController {
+
+  public captchRegister = async (params: any) => {
+    const { code } = await UserService.captchRegister(params);
+
+    console.log('code: ', code);
+  }
+
+  public loginCellphone = async (params: any) => {
+    const result = await UserService.loginCellphone(params);
+
+    if (result.code === 200) {
+
+      store.dispatch({
+        type: RECEIVE_USERDETAIL,
+        payload: { userDetail: result },
+      });
+
+      return { success: true, result };
+    } else {
+      return { success: false, result: '登录失败' };
+    }
+  }
   
   public userAdd = async (params: any) => {
     const { code, msg } = await UserService.userAdd(params);

@@ -78,7 +78,6 @@ export default function media ( state: Player = initState,  action: Actions ): P
         playMood === PLAY_MOOD.ORDER_PLAYING 
           ? state.currentSong + 1 
           : getRandomToken(state.playerSongs.length);
-      console.log('nextSongToken: ', nextSongToken);
 
       return {
         ...state,

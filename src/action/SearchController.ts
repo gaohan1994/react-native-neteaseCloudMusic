@@ -1,9 +1,23 @@
 import SearchService from '../service/SearchService';
 // import { DispatchAbstract } from './actions';
 import { store } from '../App';
-import { RECEIVE_SEARCH_HOT } from '../constants';
+import { RECEIVE_SEARCH_HOT, RECEIVE_SEARCH_DATA } from '../constants';
 
 class SearchController {
+
+  public search = async (params: any) => {
+    const { code, result } = await SearchService.search(params);
+
+    if (code === 200) {
+      store.dispatch({
+        type: RECEIVE_SEARCH_DATA,
+        payload: { searchData: result }
+      })
+      return { success: true, result }
+    } else {
+      return { success: false, result: '搜索失败' };
+    }
+  }
 
   public searchHot = async (): Promise<any> => {
     const { code, result } = await SearchService.searchHot();

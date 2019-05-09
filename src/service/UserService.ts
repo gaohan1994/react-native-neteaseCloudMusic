@@ -1,7 +1,25 @@
 import request from '../common/request';
 import config from '../common/config';
+import { jsonToQueryString } from './ApiService';
 
 class UserService {
+
+  /**
+   * 网易注册
+   */
+  public captchRegister = (params: any) => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/captch/register${jsonToQueryString(params)}`,
+      'get'
+    );
+  }
+
+  public loginCellphone = (params: any) => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/login/cellphone${jsonToQueryString(params)}`,
+      'get'
+    );
+  }
 
   public userAdd = (params: any) => {
     return request(

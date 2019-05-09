@@ -1,30 +1,25 @@
 import React from 'react';
-import { 
-  View,
-  Text,
+import {
   StyleSheet,
   StatusBar,
   Image,
   TouchableOpacity,
-  Keyboard,
   ScrollView,
   ViewStyle,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modalbox';
 import { GetLoginStatus } from '../store/status';
 import { Stores } from '../store/index';
 import { Dispatch } from 'redux';
 import StatusController from '../action/StatusControll';
-import ScreenUtil, { UIColor, commonStyle } from '../common/style';
+import ScreenUtil, {  commonStyle } from '../common/style';
 import Dialog from '../component/Dialog';
 import Validator from '../common/validator';
 import UIImage from '../common/img';
 import invariant from '../common/invariant';
 import UserController from '../action/UserController';
 import Button from '../component/Button';
-import InputWithIcon from '../component/TextWithIcon';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import NavigationService from '../NavigationService';
@@ -107,7 +102,7 @@ class Login extends React.Component <LoginProps, LoginState> {
       return { 
         success: true, 
         result: {
-          username: this.state.loginName,
+          phone: this.state.loginName,
           password: this.state.password
         }
       };
@@ -129,12 +124,9 @@ class Login extends React.Component <LoginProps, LoginState> {
         result.errMsg || ' '
       );
 
-      const payload = {
-        ...result,
-        rememberMe: false
-      };
+      const payload = { ...result };
 
-      const { success: LoginSuccess, result: LoginResult } = await UserController.login(payload);
+      const { success: LoginSuccess, result: LoginResult } = await UserController.loginCellphone(payload);
 
       invariant(
         LoginSuccess,

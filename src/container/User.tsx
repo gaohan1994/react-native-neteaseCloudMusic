@@ -75,7 +75,6 @@ const Group = ({datas}: {datas: RowItemProps[]}) => {
 
 type Props = {
   userdetail: any;
-  userinfo: any;
   dispatch: Dispatch<any>;
 };
 
@@ -158,9 +157,7 @@ class User extends React.Component<Props> {
   }
 
   private renderUser = () => {
-
-    const { userinfo } = this.props;
-
+    const { userdetail } = this.props;
     const UserViewStyle: ViewStyle = {
       ...commonStyle.layout('', '', 'column'),
       width: ScreenUtil.autoWidth(ScreenUtil.uiWidth),
@@ -192,21 +189,36 @@ class User extends React.Component<Props> {
       );
     }
 
-    if (userinfo && userinfo.username) {
+    if (userdetail && userdetail.profile) {
       return (
         <View style={UserViewStyle}>
           <View style={[SubView, {...commonStyle.pad('h', 10), ...commonStyle.pad('v', 10)}]}>
             <Image 
-              source={{uri: 'https://p1.music.126.net/WDJExxtG8RiHU_oSuyclFA==/3274345636864077.jpg'}} 
+              source={{uri: userdetail.profile && userdetail.profile.avatarUrl}} 
               style={[UserImage, { ...commonStyle.mar('r', 10) }]}
             />
-            <Text>{userinfo.username}</Text>
+            <Text>{userdetail.profile.nickname}</Text>
           </View>
           <View style={[SubView]}>
-            <PointItem data={{title: '动态', value: 0}} />
-            <PointItem data={{title: '关注', value: 0}} />
-            <PointItem data={{title: '粉丝', value: 0}} />
+            {
+              userdetail.profile && typeof userdetail.profile.eventCount === 'number' ? (
+                <PointItem data={{title: '动态', value: userdetail.profile.eventCount}} />
+              ) : null
+            }
+
+            {
+              userdetail.profile && typeof userdetail.profile.follows === 'number' ? (
+                <PointItem data={{title: '关注', value: userdetail.profile.follows}} />
+              ) : null
+            }
+
+            {
+              userdetail.profile && typeof userdetail.profile.followeds === 'number' ? (
+                <PointItem data={{title: '粉丝', value: userdetail.profile.followeds}} />
+              ) : null
+            }
           </View>
+
         </View>
       );
     } else {
@@ -234,7 +246,6 @@ class User extends React.Component<Props> {
 
 const mapStateToProps = (state: Stores) => ({
   userdetail: getUserdetail(state),
-  userinfo: getUserinfo(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

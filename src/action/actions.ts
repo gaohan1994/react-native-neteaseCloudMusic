@@ -28,6 +28,7 @@ import {
   SAVE_USERINFO,
   RECEIVE_SONG_LYC,
   CHAGNE_PLAY_MOOD,
+  RECEIVE_SEARCH_DATA,
 } from '../constants';
 import { ThunkDispatch } from 'redux-thunk';
 import { Dispatch } from 'redux';
@@ -55,7 +56,8 @@ export interface ActionAbstractInterface {
     CHANGE_LOGIN_STATUS |
     SAVE_USERINFO |
     RECEIVE_SONG_LYC |
-    CHAGNE_PLAY_MOOD;
+    CHAGNE_PLAY_MOOD |
+    RECEIVE_SEARCH_DATA;
   payload: any;
 }
 
