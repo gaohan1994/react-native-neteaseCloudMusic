@@ -183,7 +183,8 @@ class MediaController {
   }
 
   public getMinePlaylist = async (): Promise<any> => {
-    const payload = `uid=${122141577}`;
+    const { user: { userDetail } } = await store.getState();
+    const payload = `uid=${userDetail.profile.userId}`;
     const { code, playlist } = await MediaService.getMinePlaylist(payload);
 
     if (code === 200) {

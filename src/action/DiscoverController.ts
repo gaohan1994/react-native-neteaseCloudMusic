@@ -9,6 +9,17 @@ import { AbstractParams } from './actions';
 import { RECEIVE_PLAYLIST_DETAIL } from '../constants';
 
 class DiscoverController {
+
+  public playlistSubscribe = async (params: any) => {
+    const { code } = await DiscoverService.playlistSubscribe(params);
+    
+    if (code === 200) {
+      return { success: true };
+    } else {
+      return { success: false, result: '系统异常' };
+    }
+  }
+
   public banner = async (): Promise<any> => {
     const { code, banners } = await DiscoverService.banner();
     

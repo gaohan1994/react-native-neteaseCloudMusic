@@ -8,6 +8,9 @@ import { combineReducers } from 'redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
+
 import rootReducer from './index';
 
 import status, { Status, initState as statusState } from './status';
@@ -44,16 +47,24 @@ export default combineReducers({
   user
 });
 
+const persistConfig = {
+  key: 'root',
+  storage,
+  timeout: undefined,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
 const configureStore = () => {
   const store = __DEV__ === false
     ? createStore(
-      rootReducer,
+      persistedReducer,
       compose(
         applyMiddleware(thunk)
       )
     )
     : createStore(
-      rootReducer,
+      persistedReducer,
       compose(
         applyMiddleware(thunk, createLogger)
       )

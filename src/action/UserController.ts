@@ -2,8 +2,23 @@ import { store } from '../App';
 import { RECEIVE_USERDETAIL, SAVE_USERINFO } from '../constants';
 import UserService from '../service/UserService';
 import { AbstractParams } from './actions';
+import StatusControll from './StatusControll';
 
 class UserController {
+
+  public auth = async (): Promise<any> => {
+
+    const { user: { userDetail } } = await store.getState();
+
+    if (userDetail.profile) {
+      return new Promise((resolve, reject) => {
+        resolve({userDetail});
+      });
+    } else {
+      const showParams = { dispatch: store.dispatch, showLogin: true }
+      StatusControll.changeLoginModal(showParams);
+    }
+  }
 
   public captchRegister = async (params: any) => {
     const { code } = await UserService.captchRegister(params);

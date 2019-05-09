@@ -11,6 +11,9 @@ import { AbstractParams } from '../action/actions';
 import { NavIcon } from './Discover';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { Dialog } from '../component';
+import { getUserdetail } from '../store/user';
+import invariant from '../common/invariant';
+import UserController from '../action/UserController';
 
 const ImageSize = {
   width: ScreenUtil.autoWidth(120),
@@ -20,6 +23,7 @@ const ImageSize = {
 type Props = {
   playlistDetail: any;
   navigation: NavigationScreenProp<any>;
+  userdetail: any;
 };
 
 type State = {};
@@ -27,6 +31,10 @@ type State = {};
 class Playlist extends React.Component<Props, State> {
 
   componentDidMount = () => {
+    this.init();
+  }
+
+  public init = () => {
     const { navigation } = this.props;
     const playlistId = navigation.getParam('id');
     const payload: AbstractParams = {
@@ -50,6 +58,31 @@ class Playlist extends React.Component<Props, State> {
     const { navigation, playlistDetail } = this.props;
     const ids: any[] = playlistDetail.trackIds.map((id: any) => `${id.id}`);
     navigation.navigate({routeName: 'Media', params: { ids, currentSong: item || { id: ids[0] } }});
+  }
+
+  public subscribe = async (type: number) => {
+    const { playlistDetail } = this.props;
+    try {
+      UserController.auth().then(async ({userDetail}) => {
+        const payload = {
+          t: type,
+          id: playlistDetail.id,
+          uid: userDetail.profile.userId
+        };
+        
+        const { success, result } = await DiscoverController.playlistSubscribe(payload);
+  
+        invariant(
+          success,
+          result || ' '
+        );
+  
+        Dialog.info(type === 1 ? '收藏成功' : '取消收藏成功');
+        this.init();
+      });
+    } catch (error) {
+      Dialog.showToast(error.message);
+    }
   }
 
   render() {
@@ -145,22 +178,40 @@ class Playlist extends React.Component<Props, State> {
             <Icon name="control-play" size={20} />
             <Text style={[PlayTextStyle, {...commonStyle.mar('l', 5)}]} >播放全部({`共${playlistDetail.trackCount}首`})</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={() => {
-              Dialog.success('收藏成功！');
-            }}
-            style={[
-              SubView, { 
-                flex: 1, 
-                // borderTopRightRadius: ScreenUtil.autoWidth(10), 
-                justifyContent: 'center',
-                backgroundColor: UIColor.mainColor,
-              }
-            ]}
-          >
-            <Icon name="plus" size={20} color={UIColor.white} />
-            <Text style={[PlayTextStyle, { color: UIColor.white, ...commonStyle.mar('l', 5) }]} >收藏</Text>
-          </TouchableOpacity>
+
+          {
+            playlistDetail.subscribed === true ? (
+              <TouchableOpacity 
+                onPress={() => this.subscribe(2)}
+                style={[
+                  SubView, { 
+                    flex: 1, 
+                    // borderTopRightRadius: ScreenUtil.autoWidth(10), 
+                    justifyContent: 'center',
+                    backgroundColor: UIColor.mainColor,
+                  }
+                ]}
+              >
+                <Icon name="minus" size={20} color={UIColor.white} />
+                <Text style={[PlayTextStyle, { color: UIColor.white, ...commonStyle.mar('l', 5) }]} >取消收藏</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity 
+                onPress={() => this.subscribe(1)}
+                style={[
+                  SubView, { 
+                    flex: 1, 
+                    // borderTopRightRadius: ScreenUtil.autoWidth(10), 
+                    justifyContent: 'center',
+                    backgroundColor: UIColor.mainColor,
+                  }
+                ]}
+              >
+                <Icon name="plus" size={20} color={UIColor.white} />
+                <Text style={[PlayTextStyle, { color: UIColor.white, ...commonStyle.mar('l', 5) }]} >收藏</Text>
+              </TouchableOpacity>
+            )
+          }
         </View>
         <FlatList
           data={playlistDetail && playlistDetail.tracks || []}
@@ -266,6 +317,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: Stores) => ({
   playlistDetail: getPlaylistDetail(state),
+  userdetail: getUserdetail(state),
 });
 
 export default connect(mapStateToProps)(Playlist);

@@ -5,6 +5,8 @@ import RouteContainer from './route';
 import { Provider } from 'react-redux';
 import { configureStore } from './store/index';
 import { ThemeProvider, Theme } from 'react-native-elements';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react'
 
 export const store = configureStore();
 
@@ -20,11 +22,13 @@ export default class App extends React.Component<Props, any> {
     return (
       <View style={styles.container}>
         <Provider store={store}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="light-content"  />}
-          {Platform.OS === 'android' && <StatusBar barStyle="light-content"  translucent={true} />}
-          <ThemeProvider theme={theme} >
-            <RouteContainer />
-          </ThemeProvider>
+          <PersistGate  loading={null} persistor={persistStore(store)}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="light-content"  />}
+            {Platform.OS === 'android' && <StatusBar barStyle="light-content"  translucent={true} />}
+            <ThemeProvider theme={theme} >
+              <RouteContainer />
+            </ThemeProvider>
+          </PersistGate>
         </Provider>
       </View>
     );

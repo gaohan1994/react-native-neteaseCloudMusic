@@ -3,6 +3,7 @@ import Dialog from '../component/Dialog';
 import { store } from '../App';
 import { CHANGE_LOADING } from '../constants';
 import CentermError from './exception';
+
 /**
  * 加密处理
  */
@@ -171,7 +172,7 @@ const request = (
             // 'Content-Type': 'text/html; charset=utf-8',
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=UTF-8', /* 默认格式 */
-            // 'credentials': 'include',
+            'credentials': 'include',
         }
     };
 
@@ -188,7 +189,9 @@ const request = (
 
     try {
         return detaultTimeoutFetch(fetch(url, options), options)
-        .then((response: any) => response.json())
+        .then((response: any) => {
+            return response.json()
+        })
         .then((responseJson: any) => {
             ConsoleUtil(responseJson, '响应报文');
             if (callback) {
