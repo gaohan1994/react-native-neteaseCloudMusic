@@ -38,9 +38,13 @@ const Item = ({data}: {data: RowItemProps}): JSX.Element => {
     ...commonStyle.mar('l', 10),
     fontSize: ScreenUtil.setSpText(13),
   };
+  
+  const logout = () => {
+    UserController.logout();
+  }
 
   return (
-    <View style={ItemView} >
+    <TouchableOpacity onPress={data.name === 'logout' ? () => logout() : () => {}} style={ItemView} >
       <View style={SubView}>
         <Icon name={data.name} {...IconProps} />
         <Text style={RowTextStyle}>{data.title}</Text>
@@ -53,7 +57,7 @@ const Item = ({data}: {data: RowItemProps}): JSX.Element => {
           </View>
         ) : null
       }
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -132,8 +136,8 @@ class User extends React.Component<Props> {
           name: "frame"
         },
         {
-          title: '关于',
-          name: "question"
+          title: '退出登录',
+          name: "logout"
         },
       ],
     ];

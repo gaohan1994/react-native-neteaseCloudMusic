@@ -6,6 +6,17 @@ import StatusControll from './StatusControll';
 
 class UserController {
 
+  public logout = () => {
+
+    store.dispatch({
+      type: RECEIVE_USERDETAIL,
+      payload: { 
+        userDetail: {}
+      }
+    })
+    return UserService.logout();
+  }
+
   public auth = async (): Promise<any> => {
 
     const { user: { userDetail } } = await store.getState();

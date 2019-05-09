@@ -4285,6 +4285,19 @@ react-native-gesture-handler@^1.0.16, react-native-gesture-handler@~1.0.14:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-iphone-x-helper@^1.0.3:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/react-native-iphone-x-helper/download/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
+  integrity sha1-n4o3brALxxIRWr/0QgMYoAY/p5Y=
+
+react-native-keyboard-aware-scroll-view@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.npm.taobao.org/react-native-keyboard-aware-scroll-view/download/react-native-keyboard-aware-scroll-view-0.8.0.tgz#00bcaa38c91323913bb7a733059ad2bc4875f88c"
+  integrity sha1-ALyqOMkTI5E7t6czBZrSvEh1+Iw=
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-iphone-x-helper "^1.0.3"
+
 react-native-modal@^9.0.0:
   version "9.0.0"
   resolved "http://registry.npm.taobao.org/react-native-modal/download/react-native-modal-9.0.0.tgz#0bfd0770361a2e5c6e0072bfdb0f1277f9662dba"

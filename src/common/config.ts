@@ -36,8 +36,10 @@ function getEnvironmentConfig () {
     return {
       NODE_ENV: 'development',
       // FETCH_COMMON_ENTRY: 'http://localhost:3000', // development
-      FETCH_COMMON_ENTRY: 'http://172.30.200.76:3000',
-      FETCH_API_ENTRY: 'http://172.30.200.115:8080',
+      // FETCH_COMMON_ENTRY: 'http://172.30.200.76:3000',
+      FETCH_COMMON_ENTRY: 'http://192.168.1.4:3000',
+      // FETCH_API_ENTRY: 'http://172.30.200.115:8080',
+      FETCH_API_ENTRY: 'http://fy9hi5.natappfree.cc',
     };
   }
 }

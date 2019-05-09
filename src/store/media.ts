@@ -8,6 +8,7 @@ import {
   RECEIVE_VIDEO,
   RECEIVE_MY_PLAYLIST,
   CHAGNE_PLAY_MOOD,
+  RECEIVE_CURRENT_COMMENTS,
 } from '../constants';
 
 export const PLAY_MOOD = {
@@ -30,6 +31,7 @@ export type Media = {
   video: any[];
   myPlaylist: any[];
   playMood: string;
+  comments: any[];
 };
 
 export const initState = {
@@ -39,10 +41,18 @@ export const initState = {
   video: [],
   myPlaylist: [],
   playMood: PLAY_MOOD.ORDER_PLAYING,
+  comments: [],
 };
 
 export default function media ( state: Media = initState,  action: Actions ): Media {
   switch (action.type) {
+    case RECEIVE_CURRENT_COMMENTS:
+      const { payload: { comments } } = action;
+      return {
+        ...state,
+        comments
+      };
+
     case CHAGNE_PLAY_MOOD:
       const { payload: { playMood } } = action;
       return {
@@ -96,3 +106,5 @@ export const getVideos = (state: Stores) => state.media.video;
 export const getMyPlaylist = (state: Stores) => state.media.myPlaylist;
 
 export const getPlayMood = (state: Stores) => state.media.playMood;
+
+export const getComments = (state: Stores) => state.media.comments;

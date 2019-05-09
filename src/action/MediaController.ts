@@ -9,9 +9,31 @@ import {
 } from '../constants';
 import { store } from '../App';
 import numeral from 'numeral';
-import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC, CHAGNE_PLAY_MOOD } from '../constants';
+import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC, CHAGNE_PLAY_MOOD, RECEIVE_CURRENT_COMMENTS } from '../constants';
 
 class MediaController {
+
+  public addComment = async (params: any) => {
+    const { code } = await MediaService.addComment(params);
+
+    return { success: true };
+    console.log('code: ', code);
+  }
+
+  public getSongComments = async (params: any) => {
+    const { code, rows, msg } = await MediaService.getSongComments(params);
+    console.log('code: ', code);
+
+    if (code === 0) {
+      store.dispatch({
+        type: RECEIVE_CURRENT_COMMENTS,
+        payload: { comments: rows }
+      });
+      return { success: true, result: rows };
+    } else {
+      return { success: false, result: msg };
+    }
+  }
 
   public changePlayMood = async (mood: any) => {
     

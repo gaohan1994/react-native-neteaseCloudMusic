@@ -5,6 +5,22 @@ import { jsonToQueryString } from './ApiService';
 
 class MediaService {
 
+  public addComment = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/comment/add`,
+      'post',
+      {...params}
+    )
+  }
+
+  public getSongComments = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/comment/list`,
+      'post',
+      {...params}
+    )
+  }
+
   public getSongLyc = (params: any) => {
     return request(
       `${config.FETCH_COMMON_ENTRY}/lyric${jsonToQueryString(params)}`,

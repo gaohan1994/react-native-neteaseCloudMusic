@@ -17,6 +17,7 @@ import Media from './container/MediaPlay';
 import Playlist from './container/Playlist';
 import Register from './container/Register';
 import Login from './container/Login';
+import Comments from './container/Comments';
 
 const withOutNavigation = {
   navigationOptions: () => ({
@@ -27,9 +28,13 @@ const withOutNavigation = {
  * @param {NavigationRouteConfigMap} 导航器屏幕
  */
 const navigationRouteConfigMap: NavigationRouteConfigMap = {
+  
   MainTab: {
     screen: MainTab,
     ...withOutNavigation,
+  },
+  Comments: {
+    screen: Comments,
   },
   Media: {
     screen: Media,

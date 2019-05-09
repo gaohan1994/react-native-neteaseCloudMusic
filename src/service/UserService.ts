@@ -4,6 +4,13 @@ import { jsonToQueryString } from './ApiService';
 
 class UserService {
 
+  public logout = () => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/logout`,
+      'get'
+    );
+  }
+
   /**
    * 网易注册
    */

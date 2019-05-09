@@ -255,6 +255,11 @@ class MediaPlay extends React.Component<Props, State> {
     }
   }
 
+  public navToComments = () => {
+    const { currentSong } = this.props;
+    this.props.navigation.navigate({routeName: 'Comments', params: { song: currentSong }})
+  }
+
   render() {
     const containerViewStyle: ViewStyle = { flex: 1 };
     const { currentSong } = this.props;
@@ -434,7 +439,7 @@ class MediaPlay extends React.Component<Props, State> {
             )
           }
           {renderIcon("control-end", () => this.onChangeSong('NEXT'))}
-          {renderIcon("list", () => {})}
+          {renderIcon("list", () => this.navToComments())}
         </View>
       </View>
     );
