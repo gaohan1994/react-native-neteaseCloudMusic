@@ -5,6 +5,13 @@ import { RECEIVE_SEARCH_HOT, RECEIVE_SEARCH_DATA } from '../constants';
 
 class SearchController {
 
+  public emptySearch = () => {
+    store.dispatch({
+      type: RECEIVE_SEARCH_DATA,
+      payload: { searchData: {} } 
+    });
+  }
+
   public search = async (params: any) => {
     const { code, result } = await SearchService.search(params);
 

@@ -96,6 +96,7 @@ class Search extends React.Component<Props, State> {
   private textInput: any;
 
   componentDidMount() {
+    SearchController.emptySearch();
     SearchController.searchHot();
   }
 
@@ -113,11 +114,14 @@ class Search extends React.Component<Props, State> {
   public onBlur = () => {
     const { value } = this.state;
     Keyboard.dismiss();
-    if (!value) { 
-      NavigationService.goBack(); 
-    } else {
+    if (value) { 
       this.searchData();
     }
+  }
+
+  public onHotPress = (hot: any) => {
+    this.setState({value: hot.first});
+    this.searchData();
   }
 
   public showLoading = () => {
@@ -286,7 +290,7 @@ class Search extends React.Component<Props, State> {
           {
             hots && hots.length > 0 ? hots.map((hot: any, index: number) => {
               return (
-                <Button key={index} style={hotItemStyle} title={hot.first} type="link" size="sm" />
+                <Button onPress={() => this.onHotPress(hot)} key={index} style={hotItemStyle} title={hot.first} type="link" size="sm" />
               )
             }) : (
               <Text>加载中</Text>
