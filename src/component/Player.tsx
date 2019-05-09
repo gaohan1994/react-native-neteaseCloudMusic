@@ -144,7 +144,7 @@ class Player extends React.Component<Props, State> {
           paused={controll.paused}                // Pauses playback entirely.
           // paused={true}
           resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
-          repeat={true}                           // Repeat forever.
+          repeat={false}                          // Repeat forever.
           playInBackground={true}                 // Audio continues to play when app entering background.
           playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
           progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)

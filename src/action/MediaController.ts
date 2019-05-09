@@ -1,19 +1,28 @@
 import MediaService from "../service/MediaService";
 import { DispatchAbstract, AbstractParams } from './actions';
 import { 
-  RECEIVE_SONGS_URL,
   NEXT_SONG,
   LAST_SONG,
-  RECEIVE_SONGS,
   RECEIVE_VIDEO,
   RECEIVE_MY_PLAYLIST,
   CONTROLL_CURRENT_SONG
 } from '../constants';
 import { store } from '../App';
 import numeral from 'numeral';
-import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC } from '../constants';
+import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC, CHAGNE_PLAY_MOOD } from '../constants';
 
 class MediaController {
+
+  public changePlayMood = async (mood: any) => {
+    
+    await store.dispatch({
+      type: CHAGNE_PLAY_MOOD,
+      payload: {
+        playMood: mood
+      }
+    });
+    return { success: true };
+  }
 
   public playerControll = async (params: AbstractParams) => {
     const { param } = params;
@@ -52,7 +61,7 @@ class MediaController {
 
   public nextSong = async (): Promise<any> => {
     const currentState = store.getState();
-    const { player: { playerSongs, currentSong } } = currentState;
+    const { player: { playerSongs, currentSong }, media: { playMood } } = currentState;
     /**
      * @param {0.判断是否有歌}
      */
@@ -72,7 +81,7 @@ class MediaController {
      */
     store.dispatch({
       type: NEXT_SONG,
-      payload: {}
+      payload: { playMood }
     });
   }
 

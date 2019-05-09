@@ -66,3 +66,6 @@ export type SAVE_USERINFO = typeof SAVE_USERINFO;
 
 export const RECEIVE_SONG_LYC = 'RECEIVE_SONG_LYC';
 export type RECEIVE_SONG_LYC = typeof RECEIVE_SONG_LYC;
+
+export const CHAGNE_PLAY_MOOD = 'CHAGNE_PLAY_MOOD';
+export type CHAGNE_PLAY_MOOD = typeof CHAGNE_PLAY_MOOD;

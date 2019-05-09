@@ -11,6 +11,8 @@ import {
   RECEIVE_SONG_LYC,
 } from '../constants';
 import { merge } from 'lodash';
+import { store } from '../App';
+import { PLAY_MOOD, getRandomToken } from './media';
 
 export interface MediaControll {
   paused: boolean;
@@ -70,11 +72,18 @@ export default function media ( state: Player = initState,  action: Actions ): P
       };
 
     case NEXT_SONG:
+      const { payload: { playMood } } = action;
+
+      const nextSongToken = 
+        playMood === PLAY_MOOD.ORDER_PLAYING 
+          ? state.currentSong + 1 
+          : getRandomToken(state.playerSongs.length);
+      console.log('nextSongToken: ', nextSongToken);
+
       return {
         ...state,
-        currentSong: state.currentSong + 1
+        currentSong: nextSongToken
       };
-
 
     case CONTROLL_CHANGE_PAUSED:
       const { payload: { paused } } = action;

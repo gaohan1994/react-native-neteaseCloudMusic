@@ -30,6 +30,8 @@ import { getCurrentSongDetail, getControll, MediaControll } from '../store/playe
 import UIImage from '../img/index';
 import Dialog from '../component/Dialog';
 import { ScrollView } from 'react-native';
+import { getPlayMood, PLAY_MOOD } from '../store/media';
+import invariant from '../common/invariant';
 
 export function parseLyric(lrc: any) {
   var lyrics = lrc.split("\n");
@@ -81,6 +83,7 @@ type Props = {
   navigation: NavigationScreenProp<any>;
   currentSong: any;
   controll: MediaControll;
+  playMood: any;
 };
 
 type State = {
@@ -152,13 +155,7 @@ class MediaPlay extends React.Component<Props, State> {
       dispatch,
       param: { ids, currentSong }
     };
-    console.log('params: ', params);
     MediaController.getSong(params);
-    // const { success } = await MediaController.getSong(params);
-
-    // if (success === true) {
-    //   MediaController.getSongUrl(params);
-    // }
   }
 
   public fetchSongUrl = (props: Props) => {
@@ -212,6 +209,29 @@ class MediaPlay extends React.Component<Props, State> {
     MediaController.playerControll(params);
   }
 
+  public changeMood = async (mood: string) => {
+  
+    try {
+      const { success } = await MediaController.changePlayMood(mood);  
+
+      invariant(
+        success,
+        '切换模式失败'
+      );
+
+      const message = 
+        mood === PLAY_MOOD.ORDER_PLAYING 
+          ? '顺序播放'
+          : mood === PLAY_MOOD.RANDOM_PLAYING
+            ? '随机播放'
+            : ''
+
+      Dialog.info(message);
+    } catch (error) {
+      Dialog.showToast(error.message);
+    }
+  }
+
   public onChangeSong = async (type: string) => {
 
     const checkSuccessHandle = ({ success, message }: any) => {
@@ -238,7 +258,6 @@ class MediaPlay extends React.Component<Props, State> {
   render() {
     const containerViewStyle: ViewStyle = { flex: 1 };
     const { currentSong } = this.props;
-    console.log('currentSong: ', currentSong);
     return (
       <View
         style={containerViewStyle}
@@ -393,13 +412,19 @@ class MediaPlay extends React.Component<Props, State> {
       paddingBottom: ScreenUtil.isIphoneX() === true ? ScreenUtil.autoHeight(34) : ScreenUtil.autoHeight(10),
     };
 
-    const { controll: { paused } } = this.props;
+    const { controll: { paused }, playMood } = this.props;
 
     return (
       <View style={footerViewStyle}>
         <Progress />
         <View style={{flexDirection: 'row'}} >
-          {renderIcon("loop", () => {})}
+          {
+            playMood === PLAY_MOOD.ORDER_PLAYING ? (
+              renderIcon("loop", () => this.changeMood(PLAY_MOOD.RANDOM_PLAYING))
+            ) : (
+              renderIcon("shuffle", () => this.changeMood(PLAY_MOOD.ORDER_PLAYING))
+            )
+          }
           {renderIcon("control-start", () => this.onChangeSong('LAST'))}
           {
             paused === false ? (
@@ -422,6 +447,7 @@ const mapStateToProps = (state: Stores) => {
   return {
     currentSong: getCurrentSongDetail(state),
     controll,
+    playMood: getPlayMood(state),
   };
 };
 
