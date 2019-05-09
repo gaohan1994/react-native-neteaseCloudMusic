@@ -10,16 +10,24 @@ function defaultNavigationBackHandle (navigation: NavigationScreenProp<any>) {
   navigation.goBack();
 }
 
-export const HeaderLeft = ({navigation, onPress}: { navigation: NavigationScreenProp<any>; onPress?: () => void }) => {
+export const HeaderLeft = ({
+  navigation, 
+  onPress,
+  color,
+}: { 
+  navigation: NavigationScreenProp<any>; 
+  onPress?: () => void;
+  color?: string;
+}) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       onPress={onPress ? onPress : () => defaultNavigationBackHandle(navigation)} 
       style={{paddingLeft: ScreenUtil.autoWidth(15)}}
     >
       <Icon 
         size={16}
         name="arrow-left"
-        color="#ffffff"
+        color={color || "#ffffff"}
       />
     </TouchableOpacity>
   );

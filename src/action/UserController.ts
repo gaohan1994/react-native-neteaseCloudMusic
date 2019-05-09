@@ -1,23 +1,45 @@
 import { store } from '../App';
-import { RECEIVE_USERDETAIL } from '../constants';
+import { RECEIVE_USERDETAIL, SAVE_USERINFO } from '../constants';
 import UserService from '../service/UserService';
 import { AbstractParams } from './actions';
 
 class UserController {
+  
+  public userAdd = async (params: any) => {
+    const { code, msg } = await UserService.userAdd(params);
 
-  public login = async (params: AbstractParams<any>) => {
-    const { param: { phone, password } } = params;
-    const payload = `phone=${phone}&password=${password}`;
-
-    const { code, account, profile } = await UserService.login(payload);
-
-    if (code === 200) {
-      console.log('account: ', account);
-      console.log('profile: ', profile);
-      
-      return { success: true };
+    if (code !== 0) {
+      return { success: false, result: msg };
     } else {
-      return { success: false };
+      return { success: true, result: '' };
+    }
+  }
+  
+  public checkLoginNameUnique = async (params: any) => {
+    const {  } = await UserService.checkLoginNameUnique(params);
+  }
+
+  public userEdit = async (params: any) => {
+    const {  } = await UserService.userEdit(params);
+  }
+
+  public resetPwd = async (params: any) => {
+    const {  } = await UserService.resetPwd(params);
+  }
+
+  public login = async (params: any) => {
+    const { code, msg } = await UserService.login(params);
+
+    if (code === 0) {
+      store.dispatch({
+        type: SAVE_USERINFO,
+        payload: {
+          userinfo: params
+        }
+      });
+      return { success: true, result: msg };
+    } else {
+      return { success: false, result: msg };
     }
   }
 

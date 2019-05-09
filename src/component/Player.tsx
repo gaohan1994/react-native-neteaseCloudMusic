@@ -50,6 +50,8 @@ class Player extends React.Component<Props, State> {
        * @param {换歌了}
        */
       this.getMusicUrl(nextSong.id);
+
+      this.getMusicLyc(nextSong.id);
     }
 
     if (this.player && controll && nextControll && controll.ff !== nextControll.ff) {
@@ -67,6 +69,11 @@ class Player extends React.Component<Props, State> {
       MediaController.getSongUrl(payload);
     }
   };
+
+  public getMusicLyc = (id: any) => {
+    const payload = {id};
+    MediaController.getSongLyc(payload);
+  }
 
   public loadStart = () => {
 

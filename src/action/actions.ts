@@ -24,6 +24,9 @@ import {
   RECEIVE_MY_PLAYLIST,
   CONTROLL_CURRENT_SONG,
   RECEIVE_USERDETAIL,
+  CHANGE_LOGIN_STATUS,
+  SAVE_USERINFO,
+  RECEIVE_SONG_LYC,
 } from '../constants';
 import { ThunkDispatch } from 'redux-thunk';
 import { Dispatch } from 'redux';
@@ -47,7 +50,10 @@ export interface ActionAbstractInterface {
     RECEIVE_VIDEO |
     RECEIVE_MY_PLAYLIST |
     CONTROLL_CURRENT_SONG |
-    RECEIVE_USERDETAIL;
+    RECEIVE_USERDETAIL |
+    CHANGE_LOGIN_STATUS |
+    SAVE_USERINFO |
+    RECEIVE_SONG_LYC;
   payload: any;
 }
 

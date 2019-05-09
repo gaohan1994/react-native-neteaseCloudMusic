@@ -1,6 +1,6 @@
-// import { } from '../constants';
+import { CHANGE_LOGIN_STATUS } from '../constants';
 // import { StatusActions } from '../action/StatusControll';
-// import { Stores } from './index';
+import { Stores } from './index';
 import Actions from '../action/actions';
 
 export type Status = {
@@ -23,7 +23,15 @@ export const initState = {
  */
 export default function status ( state: Status = initState,  action: Actions ): Status {
   switch (action.type) {
+    case CHANGE_LOGIN_STATUS:
+      const { payload: { showLogin } } = action;
+      return {
+        ...state,
+        showLogin,
+      }
 
     default: return state;
   }
 }
+
+export const GetLoginStatus = (state: Stores) => state.status.showLogin;

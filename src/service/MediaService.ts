@@ -1,8 +1,17 @@
 import request from '../common/request';
 import config from '../common/config';
 import { data } from '../common/data';
+import { jsonToQueryString } from './ApiService';
 
 class MediaService {
+
+  public getSongLyc = (params: any) => {
+    return request(
+      `${config.FETCH_COMMON_ENTRY}/lyric${jsonToQueryString(params)}`,
+      'get'
+    )
+  }
+
   public getSong = (params: any) => {
     console.log(`${config.FETCH_COMMON_ENTRY}/song/detail?${params}`);
     return request(

@@ -73,7 +73,7 @@ class Video extends React.Component<VideoProps, VideoState> {
             <Text style={CreatorText} >{creator.nickname}</Text>
           </View>
           <View style={SubView}>
-            <TouchableOpacity onPress={() => {Dialog.showToast('点赞成功')}}>
+            <TouchableOpacity onPress={() => {Dialog.success('点赞成功')}}>
               <Icon name="like" size={20} style={IconView} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {}}>

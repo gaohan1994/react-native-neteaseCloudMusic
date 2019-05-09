@@ -1,13 +1,15 @@
-import React from 'react';
-import { Text, View, ViewStyle, TextStyle, ScrollView, Image, ImageStyle } from 'react-native';
+import React, { Dispatch } from 'react';
+import { Text, View, ViewStyle, TextStyle, ScrollView, Image, ImageStyle, TouchableOpacity } from 'react-native';
 import { Header } from '../component';
 import ScreenUtil, { UIColor, commonStyle } from '../common/style';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { connect } from 'react-redux';
 import { Stores } from '../store';
-import { getUserdetail } from '../store/user';
+import { getUserdetail, getUserinfo } from '../store/user';
 import UserController from '../action/UserController';
 import { AbstractParams } from '../action/actions';
+import NavigationService from '../NavigationService';
+import StatusControll from '../action/StatusControll';
 
 interface RowItemProps {
   name: string;
@@ -73,6 +75,8 @@ const Group = ({datas}: {datas: RowItemProps[]}) => {
 
 type Props = {
   userdetail: any;
+  userinfo: any;
+  dispatch: Dispatch<any>;
 };
 
 class User extends React.Component<Props> {
@@ -83,7 +87,21 @@ class User extends React.Component<Props> {
         uid: 122141577
       }
     };
-    UserController.userDeatail(params);
+    // UserController.userDeatail(params);
+  }
+
+  public register = () => {
+    NavigationService.navigate({routeName: 'Register'});
+  }
+
+  public login = () => {
+    const { dispatch } = this.props;
+    const params = {
+      dispatch,
+      showLogin: true
+    };
+
+    StatusControll.changeLoginModal(params);
   }
 
   render() {
@@ -141,7 +159,7 @@ class User extends React.Component<Props> {
 
   private renderUser = () => {
 
-    const { userdetail } = this.props;
+    const { userinfo } = this.props;
 
     const UserViewStyle: ViewStyle = {
       ...commonStyle.layout('', '', 'column'),
@@ -174,41 +192,53 @@ class User extends React.Component<Props> {
       );
     }
 
-    return (
-      <View style={UserViewStyle}>
-        <View style={[SubView, {...commonStyle.pad('h', 10), ...commonStyle.pad('v', 10)}]}>
-          <Image 
-            source={{uri: userdetail.profile && userdetail.profile.avatarUrl}} 
-            style={[UserImage, { ...commonStyle.mar('r', 10) }]}
-          />
-          <Text>{userdetail.profile && userdetail.profile.nickname}</Text>
+    if (userinfo && userinfo.username) {
+      return (
+        <View style={UserViewStyle}>
+          <View style={[SubView, {...commonStyle.pad('h', 10), ...commonStyle.pad('v', 10)}]}>
+            <Image 
+              source={{uri: 'https://p1.music.126.net/WDJExxtG8RiHU_oSuyclFA==/3274345636864077.jpg'}} 
+              style={[UserImage, { ...commonStyle.mar('r', 10) }]}
+            />
+            <Text>{userinfo.username}</Text>
+          </View>
+          <View style={[SubView]}>
+            <PointItem data={{title: '动态', value: 0}} />
+            <PointItem data={{title: '关注', value: 0}} />
+            <PointItem data={{title: '粉丝', value: 0}} />
+          </View>
         </View>
-        <View style={[SubView]}>
-          {
-            userdetail.profile && userdetail.profile.eventCount ? (
-              <PointItem data={{title: '动态', value: userdetail.profile.eventCount}} />
-            ) : null
-          }
-
-          {
-            userdetail.profile && userdetail.profile.follows ? (
-              <PointItem data={{title: '关注', value: userdetail.profile.follows}} />
-            ) : null
-          }
-
-          {
-            userdetail.profile && userdetail.profile.followeds ? (
-              <PointItem data={{title: '粉丝', value: userdetail.profile.followeds}} />
-            ) : null
-          }
+      );
+    } else {
+      return (
+        <View style={UserViewStyle}>
+          <TouchableOpacity 
+            style={[SubView, {...commonStyle.pad('h', 10), ...commonStyle.pad('v', 10)}]}
+            onPress={() => this.register()}
+          >
+            
+            <Text>注册</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[SubView, {...commonStyle.pad('h', 10), ...commonStyle.pad('v', 10)}]}
+            onPress={() => this.login()}
+          >
+            
+            <Text>登录</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
 const mapStateToProps = (state: Stores) => ({
   userdetail: getUserdetail(state),
+  userinfo: getUserinfo(state),
 });
 
-export default connect(mapStateToProps)(User);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  dispatch
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(User);

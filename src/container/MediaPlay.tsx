@@ -29,6 +29,27 @@ import { Stores } from '../store/index';
 import { getCurrentSongDetail, getControll, MediaControll } from '../store/player';
 import UIImage from '../img/index';
 import Dialog from '../component/Dialog';
+import { ScrollView } from 'react-native';
+
+export function parseLyric(lrc: any) {
+  var lyrics = lrc.split("\n");
+  var lrcObj = {};
+  for(var i=0;i<lyrics.length;i++){
+      var lyric = decodeURIComponent(lyrics[i]);
+      var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+      var timeRegExpArr = lyric.match(timeReg);
+      if(!timeRegExpArr)continue;
+      var clause = lyric.replace(timeReg,'');
+      for(var k = 0,h = timeRegExpArr.length;k < h;k++) {
+          var t = timeRegExpArr[k];
+          var min = Number(String(t.match(/\[\d*/i)).slice(1)),
+              sec = Number(String(t.match(/\:\d*/i)).slice(1));
+          var time = min * 60 + sec;
+          lrcObj[time] = clause;
+      }
+  }
+  return lrcObj;
+}
 
 const iconProps = {
   color: UIColor.white,
@@ -286,13 +307,42 @@ class MediaPlay extends React.Component<Props, State> {
       transform: [{
         rotate: interpolatedAnimation
       }]
+    };
+
+    const lycContainer: ViewStyle = {
+      // width: ScreenUtil.autoWidth(ScreenUtil.uiWidth),
+      height: ScreenUtil.autoWidth(300),
+    };
+
+    const RenderLycs = ({lyc}: any) => {
+
+      const lycView: ViewStyle = {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }
+
+      const lycs = [];
+      const parseLyc: any = parseLyric(lyc);
+      for (let key in parseLyc) {
+
+        if (parseLyc[key]) {
+          console.log('parseLyc[key]: ', parseLyc[key]);
+          lycs.push(
+            <Text key={key} style={{color: UIColor.white, marginTop: ScreenUtil.autoWidth(2)}} >
+              {parseLyc[key]}
+            </Text>
+          )
+        }
+      }
+      return <View style={lycView}>{lycs}</View>;
     }
 
     return (
-      <TouchableWithoutFeedback onPress={this.onContentPressHandle}>
+      <View style={{flex: 1}}>
         {
           contentType === 'Cover' ? (
-            <View style={styles.contentContainer}>
+            <TouchableOpacity  onPress={this.onContentPressHandle} style={styles.contentContainer}>
               <Animated.View style={AnimatedViewTransform}>
                 <ImageBackground
                   style={styles.imageCover}
@@ -304,14 +354,30 @@ class MediaPlay extends React.Component<Props, State> {
                   />
                 </ImageBackground>
               </Animated.View>
-            </View>
+            </TouchableOpacity>
           ) : (
-            <View style={styles.contentContainer}>
-              <Text>renderContent LYC</Text>
+            <View style={[styles.contentContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+              <TouchableOpacity onPress={this.onContentPressHandle} style={{position: 'absolute', top: 10, left: 10}}>
+                <Text style={{color: UIColor.white}}>返回封面</Text>
+              </TouchableOpacity>
+              <View style={lycContainer}>
+                {
+                  currentSong.lyc && currentSong.lyc.lyric ? (
+                    <ScrollView 
+                      style={{flex: 1}}
+                      contentContainerStyle={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
+                    >
+                      <RenderLycs lyc={currentSong.lyc.lyric} />  
+                    </ScrollView>
+                  ) : (
+                    <Text>歌词加载中</Text>
+                  )
+                }
+              </View>
             </View>
           )
         }
-      </TouchableWithoutFeedback>
+      </View>
     );
   }
 

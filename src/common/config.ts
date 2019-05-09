@@ -14,6 +14,8 @@ export interface DefaultCommonConfig {
   DEFAULT_FETCH_TIMEOUT: number;
   FETCH_COMMON_ENTRY: string;
   SAVE_MODAL_TIME: number;
+  NODE_ENV: string;
+  FETCH_API_ENTRY: string;
 }
 
 export type environment = string
@@ -26,12 +28,16 @@ function getEnvironmentConfig () {
 
   if (environment === 'production') {
     return {
-      FETCH_COMMON_ENTRY: 'http://192.168.101.241:3000', // production
+      NODE_ENV: 'production',
+      FETCH_COMMON_ENTRY: 'http://192.168.31.104:3000', // production
+      FETCH_API_ENTRY: 'http://172.30.200.115:8080',
     };
   } else {
     return {
+      NODE_ENV: 'development',
       // FETCH_COMMON_ENTRY: 'http://localhost:3000', // development
-      FETCH_COMMON_ENTRY: 'http://192.168.101.241:3000'
+      FETCH_COMMON_ENTRY: 'http://172.30.200.76:3000',
+      FETCH_API_ENTRY: 'http://172.30.200.115:8080',
     };
   }
 }

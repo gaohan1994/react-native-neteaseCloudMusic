@@ -3,12 +3,41 @@ import config from '../common/config';
 
 class UserService {
 
-  public login = (params: any) => {
-    
+  public userAdd = (params: any) => {
     return request(
-      `${config.FETCH_COMMON_ENTRY}/login/cellphone?${params}`,
-      'GET',
-    )
+      `${config.FETCH_API_ENTRY}/app/register`,
+      'post',
+      {...params}
+    );
+  }
+
+  public checkLoginNameUnique = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/system/user/checkLoginNameUnique`,
+      'post',
+      {...params}
+    );
+  }
+  public userEdit = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/system/user/edit`,
+      'post',
+      {...params}
+    );
+  }
+  public resetPwd = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/system/user/resetPwd`,
+      'post',
+      {...params}
+    );
+  }
+  public login = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/loginApp`,
+      'post',
+      {...params}
+    );
   }
 
   public refresh = () => {

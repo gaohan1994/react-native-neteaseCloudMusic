@@ -7,7 +7,8 @@ import {
   LAST_SONG,
   RECEIVE_PLAYER_SONGS,
   CONTROLL_CURRENT_DETAIL,
-  CONTROLL_CURRENT_SONG
+  CONTROLL_CURRENT_SONG,
+  RECEIVE_SONG_LYC,
 } from '../constants';
 import { merge } from 'lodash';
 
@@ -92,6 +93,27 @@ export default function media ( state: Player = initState,  action: Actions ): P
         playerSongs,
         currentSong: newCurrentSong || 0
       };
+
+    case RECEIVE_SONG_LYC:
+      const { payload: {lyc} } = action;
+      const { id: lycSongId } = lyc;
+      const lycIndex = state.playerSongs.findIndex((s: any) => s.id === lycSongId);
+
+      if (lycIndex !== -1) {
+        /**
+         * @param {找到了}
+         */
+        const currentSongDetail = {
+          ...state.playerSongs[lycIndex],
+          lyc,
+        };
+
+        state.playerSongs[lycIndex] = currentSongDetail;
+        console.log('currentSongDetail ', currentSongDetail);
+        return merge({}, state, {});
+      } else {
+        return state;
+      }
 
     case RECEIVE_CURRENT_SONG_URL:
       const { payload: { currentSongUrl } } = action;

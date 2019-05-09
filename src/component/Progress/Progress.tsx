@@ -4,7 +4,7 @@ import ScreenUtil, { UIColor, commonStyle } from '../../common/style';
 import Slider from 'react-native-slider';
 import { MediaControll, getControll } from '../../store/player';
 import { connect } from 'react-redux';
-import { Stores } from 'src/store';
+import { Stores } from '../store';
 import { store } from '../../App';
 import { CONTROLL_CURRENT_DETAIL } from '../../constants';
 import numeral from 'numeral';

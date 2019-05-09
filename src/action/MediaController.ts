@@ -11,7 +11,7 @@ import {
 } from '../constants';
 import { store } from '../App';
 import numeral from 'numeral';
-import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV } from '../constants';
+import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC } from '../constants';
 
 class MediaController {
 
@@ -94,7 +94,7 @@ class MediaController {
       dispatch({
         type: CONTROLL_CURRENT_SONG,
         payload: { currentSong: index }
-      })
+      });
       return { success: true };
     } else {
       return { success: false };
@@ -114,6 +114,26 @@ class MediaController {
       })
     } else {
       return { success: false };
+    }
+  }
+
+  public getSongLyc = async (params: any) => {
+    
+    const { code, lrc, msg } = await MediaService.getSongLyc(params);
+
+    if (code === 200) {
+      store.dispatch({
+        type: RECEIVE_SONG_LYC,
+        payload: {
+          lyc: {
+            ...lrc,
+            id: params.id
+          }
+        }
+      });
+      return { success: true, result: lrc };
+    } else {
+      return { success: false, result: msg };
     }
   }
 

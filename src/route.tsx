@@ -15,6 +15,8 @@ import MainTab from './TabNavigator';
 import Search from './container/Search';
 import Media from './container/MediaPlay';
 import Playlist from './container/Playlist';
+import Register from './container/Register';
+import Login from './container/Login';
 
 const withOutNavigation = {
   navigationOptions: () => ({
@@ -40,6 +42,9 @@ const navigationRouteConfigMap: NavigationRouteConfigMap = {
     screen: Search,
     ...withOutNavigation,
   },
+  Register: {
+    screen: Register,
+  }
 };
 
 /**
@@ -88,6 +93,7 @@ class RouteContainer extends React.Component<any, any> {
           height: ScreenUtil.autoHeight(ScreenUtil.uiHeight)
         }} 
       >
+        <Login />
         <MyNavigationContainer ref={(navigatorRef: any) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />
       </View>
     );

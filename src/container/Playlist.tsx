@@ -147,7 +147,7 @@ class Playlist extends React.Component<Props, State> {
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => {
-              Dialog.showToast('收藏成功！');
+              Dialog.success('收藏成功！');
             }}
             style={[
               SubView, { 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacityProps } from 'react-native';
+import { TouchableOpacityProps, View } from 'react-native';
 
 declare namespace Theme {
   function set (param: any): void;
@@ -41,7 +41,7 @@ export interface OverlayViewProps {
 
 export class OverlayView extends React.Component<OverlayViewProps, {}> { }
 
-declare class Overlay { 
+declare class Overlay extends View { 
   static View: OverlayView;
   static PullView: OverlayPullView;
 }
@@ -84,6 +84,39 @@ export interface SelectProps extends TouchableOpacityProps {
 declare class Select extends React.Component<SelectProps, {}> {
 
 }
+
+export type ToastDuration = 'short' | 'long';
+
+export interface ToastFunctionInterface {
+  text: string;
+  duration?: ToastDuration;
+  position?: ToastPosition;
+}
+
+export type ToastPosition = 'center';
+
+
+export class ToastView extends View {
+
+}
+
+export class Toast extends Overlay {
+  static message: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static success: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static fail: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static smile: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static sad: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static info: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+  static stop: (text: string, duration?: ToastDuration, position?: ToastPosition) => void;
+
+  static ToastView: ToastView;
+  static defaultDuration: ToastDuration;
+  static defaultPosition: ToastPosition;
+  static messageDefaultDuration: ToastDuration;
+  static messageDefaultPosition: ToastPosition;
+}
+
+export class TopView extends React.Component { }
 
 export { 
   Button,

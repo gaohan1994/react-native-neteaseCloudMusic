@@ -170,7 +170,7 @@ const request = (
         headers: {
             // 'Content-Type': 'text/html; charset=utf-8',
             'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', /* 默认格式 */
+            'Content-Type': 'application/json; charset=UTF-8', /* 默认格式 */
             // 'credentials': 'include',
         }
     };
@@ -197,13 +197,11 @@ const request = (
             return responseJson;
         })
         .catch((e: any) => {
-            // Dialog.showToast('网络异常');
             errorCallback(e);
         });
     } catch (error) {
         console.log('error url: ', url);
         console.log('error: ', error);
-        // Dialog.showToast('网络异常');
         errorCallback(error);
     }
 };
