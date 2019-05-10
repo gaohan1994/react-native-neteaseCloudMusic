@@ -29,7 +29,7 @@ function getEnvironmentConfig () {
   if (environment === 'production') {
     return {
       NODE_ENV: 'production',
-      FETCH_COMMON_ENTRY: 'http://192.168.31.104:3000', // production
+      FETCH_COMMON_ENTRY: 'http://172.30.200.2:3000', // production
       FETCH_API_ENTRY: 'http://172.30.200.115:8080',
     };
   } else {
@@ -37,9 +37,8 @@ function getEnvironmentConfig () {
       NODE_ENV: 'development',
       // FETCH_COMMON_ENTRY: 'http://localhost:3000', // development
       // FETCH_COMMON_ENTRY: 'http://172.30.200.76:3000',
-      FETCH_COMMON_ENTRY: 'http://192.168.1.4:3000',
-      // FETCH_API_ENTRY: 'http://172.30.200.115:8080',
-      FETCH_API_ENTRY: 'http://fy9hi5.natappfree.cc',
+      FETCH_COMMON_ENTRY: 'http://172.30.200.2:3000',
+      FETCH_API_ENTRY: 'http://172.30.200.115:8080',
     };
   }
 }

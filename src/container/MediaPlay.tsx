@@ -32,6 +32,9 @@ import Dialog from '../component/Dialog';
 import { ScrollView } from 'react-native';
 import { getPlayMood, PLAY_MOOD } from '../store/media';
 import invariant from '../common/invariant';
+import UserController from '../action/UserController';
+import moment from 'moment';
+import { renderSingerName } from './Comments';
 
 export function parseLyric(lrc: any) {
   var lyrics = lrc.split("\n");
@@ -209,6 +212,34 @@ class MediaPlay extends React.Component<Props, State> {
     MediaController.playerControll(params);
   }
 
+  public doCollect = () => {
+    const { currentSong } = this.props;
+    console.log('doCollect: ');
+    UserController.auth().then(async ({userDetail}) => {
+      try {
+        const payload = {
+          musicId: currentSong.id,
+          userId: userDetail.profile.userId,
+          collectionTime: moment(),
+          musicName: currentSong.name,
+          musicArtist: renderSingerName({song: currentSong}) || '',
+          musicAlbum: currentSong.al && currentSong.al.name || '',
+          musicUrl: currentSong.al && currentSong.al.picUrl || ''
+        };
+  
+        const { success, result } = await MediaController.addCollct(payload);
+
+        invariant(
+          success,
+          result || ' '
+        );
+        Dialog.success('收藏成功');
+      } catch (error) {
+        Dialog.showToast(error.message);
+      }
+    });
+  }
+
   public changeMood = async (mood: string) => {
   
     try {
@@ -313,7 +344,7 @@ class MediaPlay extends React.Component<Props, State> {
             {artists.join(',')}
           </Text>
         </View>
-        {renderIcon("share-alt", () => {})}
+        {renderIcon("heart", () => this.doCollect())}
       </View>
     );
   }

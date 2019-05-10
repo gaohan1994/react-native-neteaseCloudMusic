@@ -5,6 +5,30 @@ import { jsonToQueryString } from './ApiService';
 
 class MediaService {
 
+  public removeCollect = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/collection/remove`,
+      'post',
+      {...params}
+    )
+  }
+
+  public addCollct = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/collection/add`,
+      'post',
+      {...params}
+    )
+  }
+
+  public collectList = (params: any) => {
+    return request(
+      `${config.FETCH_API_ENTRY}/app/collection/list`,
+      'post',
+      {...params}
+    )
+  }
+
   public addComment = (params: any) => {
     return request(
       `${config.FETCH_API_ENTRY}/app/comment/add`,

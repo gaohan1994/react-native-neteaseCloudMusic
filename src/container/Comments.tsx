@@ -15,6 +15,16 @@ import invariant from '../common/invariant';
 import Dialog from '../component/Dialog';
 import moment from 'moment';
 
+export const renderSingerName = ({song}: any) => {
+  const artists: string[] = [];
+
+  song && song.ar && song.ar.forEach((artist: any) => {
+    artists.push(artist.name);
+  });
+
+  return artists.join(',');
+}
+
 const Comment = ({comment}: any) => {
   return (
     <View style={{flexDirection: 'column', marginTop: ScreenUtil.autoWidth(12)}}>
@@ -147,15 +157,6 @@ class Comments extends React.Component<Props, State> {
   render() {
     const { song, comments } = this.props;
 
-    const renderSingerName = ({song}: any) => {
-      const artists: string[] = [];
-
-      song && song.ar && song.ar.forEach((artist: any) => {
-        artists.push(artist.name);
-      });
-
-      return artists.join(',');
-    }
     console.log('song: ', song);
     const paddingWidth: number = ScreenUtil.autoWidth(12);
 

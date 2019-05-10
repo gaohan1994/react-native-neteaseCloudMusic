@@ -9,9 +9,52 @@ import {
 } from '../constants';
 import { store } from '../App';
 import numeral from 'numeral';
-import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC, CHAGNE_PLAY_MOOD, RECEIVE_CURRENT_COMMENTS } from '../constants';
+import { RECEIVE_PLAYER_SONGS, RECEIVE_CURRENT_SONG_URL, CONTROLL_CHANGE_PAUSED, RECEIVE_MV, RECEIVE_SONG_LYC, CHAGNE_PLAY_MOOD, RECEIVE_CURRENT_COMMENTS, RECEIVE_COLLECTION_LIST } from '../constants';
 
 class MediaController {
+
+  public removeCollect = async (params: any) => {
+    const { code } = await MediaService.removeCollect(params);
+
+    if (code === 0) {
+      
+    } else {
+
+    }
+  }
+
+  public addCollct = async (params: any) => {
+    const { code } = await MediaService.addCollct(params);
+    console.log('code: ', code);
+    if (code === 0) {
+      return { success: true };
+    } else {
+      return { success: false, result: '收藏失败' };
+    }
+  }
+
+  public collectList = async () => {
+    const { user: { userDetail } } = await store.getState();
+
+    if (userDetail.profile.userId) {
+      const payload = {
+        userId: userDetail.profile.userId
+      };
+      const { code, rows } = await MediaService.collectList(payload);
+
+      if (code === 0) {
+        store.dispatch({
+          type: RECEIVE_COLLECTION_LIST,
+          payload: { collectList: rows }
+        })
+        return { success: true, result: rows };
+      } else {
+        return { success: false, result: '请求失败' };
+      }
+    } else {
+      return { success: false };
+    }
+  }
 
   public addComment = async (params: any) => {
     const { code } = await MediaService.addComment(params);

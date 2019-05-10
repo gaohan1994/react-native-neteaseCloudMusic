@@ -1,15 +1,75 @@
 import React, { Dispatch }  from 'react';
-import { Text, View, FlatList, ViewStyle, Image, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, ViewStyle, Image, TouchableOpacity, TextStyle } from 'react-native';
 import { Header } from '../component';
 import { connect } from 'react-redux';
 import { Stores } from '../store';
 import MediaController from '../action/MediaController';
-import { getMyPlaylist } from '../store/media';
+import { getMyPlaylist, getCollectList } from '../store/media';
 import ScreenUtil, { commonStyle, UIColor } from '../common/style';
 import NavigationService from '../NavigationService';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+
+
+const CollectItem = ({item, index}: any): any => {
+
+  const onSongPressHandle = (item: any) => {
+    const ids: any[] = [item.musicId];
+    NavigationService.navigate({routeName: 'Media', params: { ids, currentSong: { id: ids[0] } }});
+  }
+
+  console.log('item: ', item);
+  const itemViewStyle: ViewStyle = {
+    width: ScreenUtil.autoWidth(ScreenUtil.uiWidth),
+    height: ScreenUtil.autoHeight(50),
+    flexDirection: 'row',
+    ...commonStyle.bor('t', 1),
+  };
+
+  const NumberView: TextStyle = {
+    fontSize: ScreenUtil.setSpText(12),
+    color: UIColor.grayFont
+  };
+
+  const detailViewStyle: ViewStyle = {
+    ...commonStyle.layout('flex-start', 'space-around'),
+  };
+
+  const SongName: TextStyle = {
+    fontSize: ScreenUtil.setSpText(14),
+    fontWeight: '400',
+  };
+
+  const SingerName: TextStyle = {
+    fontSize: ScreenUtil.setSpText(12),
+    color: UIColor.grayFont
+  };
+
+  return (
+    <TouchableOpacity style={itemViewStyle} onPress={() => onSongPressHandle(item)} >
+      <View
+        style={{
+          ...commonStyle.layout('center', 'center'),
+          width: ScreenUtil.autoWidth(50),
+          height: ScreenUtil.autoWidth(50),
+        }}
+      >
+        <Text style={NumberView}>{index + 1}</Text>
+      </View>
+      <View style={detailViewStyle}>
+        <Text numberOfLines={1} style={SongName}>{item.musicName}</Text>
+        <Text numberOfLines={1} style={SingerName}>
+          {item.musicArtist}
+          {`  -  `}
+          {item.musicAlbum && item.musicAlbum}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 type Props = {
   myPlaylist: any[];
+  collectList: any[];
 };
 
 type State = {};
@@ -17,11 +77,16 @@ class Mine extends React.Component<Props, State> {
 
   componentDidMount = () => {
     MediaController.getMinePlaylist();
+    MediaController.collectList();
+  }
+
+  public myCollectRefresh = () => {
+    MediaController.collectList();
   }
 
   render() {
 
-    const { myPlaylist } = this.props;
+    const { myPlaylist, collectList } = this.props;
     console.log('myPlaylist: ', myPlaylist);
 
     const PlaylistTitle: ViewStyle = {
@@ -33,10 +98,32 @@ class Mine extends React.Component<Props, State> {
     return (
       <View style={{flex: 1}}>
         <Header />
-        <View style={PlaylistTitle}>
-          <Text style={{fontSize: ScreenUtil.setSpText(13)}}>我的歌单（{`${myPlaylist.length}`}）</Text>
-        </View>
-        {this.renderPlaylistView(myPlaylist)}
+        <ScrollableTabView>
+          <View style={{flex: 1}} tabLabel="我的歌单" >
+            <View style={PlaylistTitle}>
+              <Text style={{fontSize: ScreenUtil.setSpText(13)}}>我的歌单（{`${myPlaylist.length}`}）</Text>
+            </View>
+            {this.renderPlaylistView(myPlaylist)}
+          </View>
+
+          <View style={{flex: 1}}  tabLabel="我收藏的歌曲">
+            <View style={PlaylistTitle}>
+              <Text style={{fontSize: ScreenUtil.setSpText(13)}}>我收藏的歌曲</Text>
+            </View>
+
+            {/* {this.renderPlaylistView()} */}
+
+            <FlatList
+              data={collectList || []}
+              renderItem={this.renderCollectMusic}
+              contentContainerStyle={commonStyle.pad('b', 30)}
+              onRefresh={this.myCollectRefresh}
+              refreshing={false}
+              ListEmptyComponent={<Text>暂无收藏的音乐</Text>}
+              // keyExtractor={this.keyExtractor}
+            /> 
+          </View>
+        </ScrollableTabView>
       </View>
     );
   }
@@ -49,17 +136,19 @@ class Mine extends React.Component<Props, State> {
         renderItem={this.renderItem}
         contentContainerStyle={commonStyle.pad('b', 30)}
         keyExtractor={this.keyExtractor}
-        // refreshing={refreshing}
-        // onRefresh={this.onRefresh}
-        // initialNumToRender={10}
-        // onEndReachedThreshold={0.1}
-        // onEndReached={this.onEndReached}
-        // ListEmptyComponent={(<Empty title="暂无更多商品！" />)}
       />
     );
   }
 
   private keyExtractor = (item: any, index: number): string => index + '';
+
+  private renderCollectMusic = ({item, index}: any) => {
+    // 有个问题是必须请求每首歌的详情
+
+    return (
+      <CollectItem item={item} index={index} />
+    );
+  }
 
   private renderItem = ({item}: any) => {
 
@@ -121,6 +210,7 @@ class Mine extends React.Component<Props, State> {
 
 const mapStateToProps = (state: Stores) => ({
   myPlaylist: getMyPlaylist(state),
+  collectList: getCollectList(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
