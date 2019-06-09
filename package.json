@@ -1,0 +1,60 @@
+{
+  "name": "music",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@react-native-community/blur": "^3.3.1",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "numeral": "^2.0.6",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "0.57.4",
+    "react-native-elements": "^1.1.0",
+    "react-native-gesture-handler": "^1.2.1",
+    "react-native-keyboard-aware-scroll-view": "^0.8.0",
+    "react-native-modal": "^11.0.0",
+    "react-native-modalbox": "^1.7.1",
+    "react-native-scrollable-tab-view": "^0.10.0",
+    "react-native-slider": "^0.11.0",
+    "react-native-swiper": "^1.5.14",
+    "react-native-tab-navigator": "^0.3.4",
+    "react-native-vector-icons": "^6.4.2",
+    "react-native-video": "^4.4.1",
+    "react-navigation": "^3.3.2",
+    "react-redux": "^5.1.0",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
+    "teaset": "^0.6.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.126",
+    "@types/moment": "^2.13.0",
+    "@types/numeral": "^0.0.25",
+    "@types/react": "^16.8.17",
+    "@types/react-native": "^0.57.55",
+    "@types/react-native-modalbox": "^1.4.8",
+    "@types/react-native-scrollable-tab-view": "^0.10.0",
+    "@types/react-native-swiper": "^1.5.10",
+    "@types/react-native-tab-navigator": "^0.3.3",
+    "@types/react-native-vector-icons": "^6.4.0",
+    "@types/react-native-video": "^3.1.3",
+    "@types/react-navigation": "^3.0.7",
+    "@types/react-redux": "^6.0.9",
+    "@types/redux-logger": "^3.0.7",
+    "babel-jest": "24.8.0",
+    "jest": "24.8.0",
+    "metro-react-native-babel-preset": "0.54.0",
+    "react-native-typescript-transformer": "^1.2.12",
+    "react-test-renderer": "16.6.0-alpha.8af6728",
+    "typescript": "^3.4.5"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
