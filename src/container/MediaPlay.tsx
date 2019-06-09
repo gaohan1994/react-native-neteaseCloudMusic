@@ -20,7 +20,7 @@ import {
   Player
 } from '../component';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-// import { BlurView } from '@react-native-community/blur';
+import { BlurView } from '@react-native-community/blur';
 import { connect } from 'react-redux';
 import { NavigationScreenProp } from 'react-navigation';
 import { DispatchAbstract, AbstractParams } from '../action/actions';
@@ -313,7 +313,7 @@ class MediaPlay extends React.Component<Props, State> {
             />
           ) : null
         }
-        {/* {
+        {
           this.state.viewRef ? (
             <BlurView
               style={styles.absolute}
@@ -322,7 +322,7 @@ class MediaPlay extends React.Component<Props, State> {
               blurAmount={10}
             />
           ) : null
-        } */}
+        }
         <StatusBar barStyle="light-content" />
 
         <Header
