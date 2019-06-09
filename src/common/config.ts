@@ -37,7 +37,7 @@ function getEnvironmentConfig () {
       NODE_ENV: 'development',
       // FETCH_COMMON_ENTRY: 'http://localhost:3000', // development
       // FETCH_COMMON_ENTRY: 'http://172.30.200.76:3000',
-      FETCH_COMMON_ENTRY: 'http://gaohan.natapp1.cc',
+      FETCH_COMMON_ENTRY: 'http://127.0.0.1:3000',
       FETCH_API_ENTRY: 'http://zhouminghui.natapp1.cc',
     };
   }
